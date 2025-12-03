@@ -1,0 +1,6 @@
+{
+  "GadgetsOnline": [
+    "EntityFramework6.Npgsql",
+    "Microsoft.VisualStudio.Azure.Containers.Tools.Targets"
+  ]
+}
