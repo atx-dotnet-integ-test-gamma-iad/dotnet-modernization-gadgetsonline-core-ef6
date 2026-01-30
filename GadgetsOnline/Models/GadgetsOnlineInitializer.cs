@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GadgetsOnline.Models
 {
-    public class GadgetsOnlineInitializer : CreateDatabaseIfNotExists<GadgetsOnlineEntities>
+    public static class GadgetsOnlineInitializer
     {
-        protected override void Seed(GadgetsOnlineEntities context)
+        public static void Initialize(GadgetsOnlineEntities context)
         {
+            context.Database.EnsureCreated();
+
+            if (context.Categories.Any())
+            {
+                return;
+            }
             // Categories
             var categories = new List<Category>
             {
@@ -16,7 +22,7 @@ namespace GadgetsOnline.Models
                 new Category { CategoryId = 4, Name = "Audio", Description = "Latest audio devices" },
                 new Category { CategoryId = 5, Name = "Accessories", Description = "USB Cables, Mobile chargers and Keyboards etc" }
             };
-            categories.ForEach(c => context.Categories.Add(c));
+            context.Categories.AddRange(categories);
 
             // Products
             var products = new List<Product>
@@ -35,7 +41,7 @@ namespace GadgetsOnline.Models
                 new Product{ ProductId = 12, CategoryId=5, Name="Mousepad", Price=2.99M, ProductArtUrl = "/Content/Images/placeholder.gif"},
                 new Product{ ProductId = 13, CategoryId=5, Name="Keyboard", Price=9.99M, ProductArtUrl = "/Content/Images/placeholder.gif"},
             };
-            products.ForEach(p => context.Products.Add(p));
+            context.Products.AddRange(products);
 
             context.SaveChanges();
         }
