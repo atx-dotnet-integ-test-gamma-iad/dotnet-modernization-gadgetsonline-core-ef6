@@ -3,10 +3,26 @@ using System.Data.Entity;
 
 namespace GadgetsOnline.Models
 {
+    /// <summary>
+    /// Database initializer for GadgetsOnline.
+    /// PostgreSQL Migration Notes:
+    /// - CreateDatabaseIfNotExists strategy is compatible with PostgreSQL via Npgsql EF6 provider
+    /// - Explicit ID assignments (CategoryId, ProductId) will override auto-increment sequences
+    /// - After initial seeding, PostgreSQL sequences MUST be reset to prevent duplicate key violations
+    /// 
+    /// IMPORTANT: After first run with seed data, execute these SQL commands to reset sequences:
+    /// SELECT setval(pg_get_serial_sequence('"Categories"', '"CategoryId"'), (SELECT MAX("CategoryId") FROM "Categories"));
+    /// SELECT setval(pg_get_serial_sequence('"Products"', '"ProductId"'), (SELECT MAX("ProductId") FROM "Products"));
+    /// 
+    /// Alternative: Remove explicit ID assignments and let PostgreSQL auto-generate them.
+    /// </summary>
     public class GadgetsOnlineInitializer : CreateDatabaseIfNotExists<GadgetsOnlineEntities>
     {
         protected override void Seed(GadgetsOnlineEntities context)
         {
+            // PostgreSQL Note: Explicit ID values are preserved for data consistency.
+            // Sequences will need to be reset after initial seeding (see class documentation).
+            
             // Categories
             var categories = new List<Category>
             {
