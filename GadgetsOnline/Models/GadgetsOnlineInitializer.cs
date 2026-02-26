@@ -1,12 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace GadgetsOnline.Models
 {
-    public class GadgetsOnlineInitializer : CreateDatabaseIfNotExists<GadgetsOnlineEntities>
+    public class GadgetsOnlineInitializer
     {
-        protected override void Seed(GadgetsOnlineEntities context)
+        public static void Initialize(GadgetsOnlineEntities context)
         {
+            context.Database.EnsureCreated();
+
+            // Check if data already exists
+            if (context.Categories.Any())
+            {
+                return;
+            }
+
             // Categories
             var categories = new List<Category>
             {
