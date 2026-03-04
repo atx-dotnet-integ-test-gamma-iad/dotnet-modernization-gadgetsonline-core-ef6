@@ -1,0 +1,56 @@
+-- ============================================================================
+-- CONVERTED SQL STATEMENTS CATALOG
+-- Microsoft SQL Server to PostgreSQL Migration - GadgetsOnline Application
+-- ============================================================================
+-- 
+-- Date: 2026-03-04
+-- Application: GadgetsOnline
+-- DMS Migration Project ARN: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+-- 
+-- ============================================================================
+-- CONVERSION SUMMARY
+-- ============================================================================
+-- 
+-- Total SQL statements extracted from codebase: 0
+-- Total SQL statements passed through DMS MCP tool: 0
+-- Total SQL statements requiring manual conversion: 0
+-- Total SQL statement pairs validated for equivalency: 0
+-- 
+-- ============================================================================
+-- FINDING
+-- ============================================================================
+-- 
+-- No raw SQL statements were found in the GadgetsOnline codebase to convert.
+-- 
+-- This application exclusively uses Entity Framework 6 LINQ queries for all
+-- database access. The EF6 provider has been configured to use Npgsql
+-- (PostgreSQL), which handles SQL generation automatically at runtime.
+-- 
+-- No DMS MCP tool conversion was required because there are no raw SQL
+-- statements in the application code. The exhaustive scan performed in Step 1
+-- confirmed that all database operations are performed through EF6 LINQ
+-- (Products.Take(), Categories.ToList(), Carts.Where(), Orders.Add(),
+-- SaveChanges(), etc.).
+-- 
+-- ============================================================================
+-- ENTITY FRAMEWORK CONFIGURATION (handles SQL generation automatically)
+-- ============================================================================
+-- 
+-- The Entity Framework 6 configuration has been set up to use:
+--   - Provider: Npgsql (EntityFramework6.Npgsql v6.4.3)
+--   - Provider Services: NpgsqlServices.Instance
+--   - Connection Factory: NpgsqlConnectionFactory
+--   - Table Name Mappings: PostgreSQL-compatible lowercase names
+--   - Column Name Mappings: PostgreSQL-compatible lowercase names
+--   - Schema: gadgetsonline_dbo
+--   - DateTime Handling: UTC conversion for PostgreSQL compatibility
+-- 
+-- Table Mappings:
+--   - Product -> products (schema: gadgetsonline_dbo)
+--   - Category -> categories (schema: gadgetsonline_dbo)
+--   - Cart -> carts (schema: gadgetsonline_dbo)
+--   - Order -> orders (schema: gadgetsonline_dbo)
+--   - OrderDetail -> orderdetails (schema: gadgetsonline_dbo)
+-- 
+-- Result: 0 SQL statements converted
+-- ============================================================================

@@ -1,0 +1,124 @@
+-- ============================================================================
+-- EXTRACTED SQL STATEMENTS CATALOG
+-- Microsoft SQL Server to PostgreSQL Migration - GadgetsOnline Application
+-- ============================================================================
+-- 
+-- Date: 2026-03-04
+-- Application: GadgetsOnline
+-- 
+-- FINDING: No raw SQL statements were found in the codebase.
+-- 
+-- This application exclusively uses Entity Framework 6 LINQ queries for all
+-- database access. All database operations are performed through the
+-- GadgetsOnlineEntities DbContext using LINQ-to-Entities syntax.
+-- 
+-- ============================================================================
+-- EXHAUSTIVE SCAN RESULTS
+-- ============================================================================
+-- 
+-- Files scanned (all .cs files in the project):
+-- 
+--   Services Layer:
+--   - Services/Inventory.cs
+--       * GetBestSellers(int count) - Uses LINQ: Products.Take(count).ToList()
+--       * GetAllCategories() - Uses LINQ: Categories.ToList()
+--       * GetAllProductsInCategory(string category) - Uses LINQ: Products.Where(...).ToList()
+--       * GetProductById(int id) - Uses LINQ: Products.Where(...).FirstOrDefault()
+--       * GetProductNameById(int id) - Uses LINQ: Products.Where(...).FirstOrDefault().Name
+--       * Result: NO raw SQL statements
+-- 
+--   - Services/ShoppingCart.cs
+--       * GetCart(HttpContext) - Session management, no DB access
+--       * CreateOrder(Order) - Uses LINQ: iteration + OrderDetails.Add(), SaveChanges()
+--       * EmptyCart() - Uses LINQ: Carts.Where(...), Carts.Remove(), SaveChanges()
+--       * AddToCart(int id) - Uses LINQ: Carts.SingleOrDefault(), Carts.Add(), SaveChanges()
+--       * GetCount() - Uses LINQ: Carts.Where(...).Select(...).Sum()
+--       * RemoveFromCart(int id) - Uses LINQ: Carts.Single(), Carts.Remove(), SaveChanges()
+--       * GetCartItems() - Uses LINQ: Carts.Where(...).ToList()
+--       * GetTotal() - Uses LINQ: Carts.Where(...).Select(...).Sum()
+--       * Result: NO raw SQL statements
+-- 
+--   - Services/OrderProcessing.cs
+--       * ProcessOrder(Order, HttpContext) - Uses LINQ: Orders.Add(), SaveChanges()
+--       * Result: NO raw SQL statements
+-- 
+--   Controllers Layer:
+--   - Controllers/CheckoutController.cs - Delegates to IOrderProcessing service
+--       * Result: NO raw SQL statements, NO direct DB access
+-- 
+--   - Controllers/HomeController.cs - Delegates to IInventory service
+--       * Result: NO raw SQL statements, NO direct DB access
+-- 
+--   - Controllers/ShoppingCartController.cs - Delegates to IInventory and IShoppingCart services
+--       * Result: NO raw SQL statements, NO direct DB access
+-- 
+--   - Controllers/StoreController.cs - Delegates to IInventory and IShoppingCart services
+--       * Result: NO raw SQL statements, NO direct DB access
+-- 
+--   Components Layer:
+--   - Components/CategoryMenuViewComponent.cs - Delegates to IInventory service
+--       * Result: NO raw SQL statements, NO direct DB access
+-- 
+--   Model Layer:
+--   - Models/GadgetsOnlineEntities.cs - DbContext configuration, OnModelCreating
+--       * Result: NO raw SQL statements (only fluent API configuration)
+-- 
+--   - Models/GadgetsOnlineInitializer.cs - Seed data
+--       * Uses LINQ: context.Categories.Add(), context.Products.Add(), context.SaveChanges()
+--       * Result: NO raw SQL statements
+-- 
+--   - Models/Cart.cs, Category.cs, Product.cs, Order.cs, OrderDetail.cs - Entity POCO classes
+--       * Result: NO raw SQL statements
+-- 
+--   Other Files:
+--   - Program.cs - Application entry point
+--       * Result: NO raw SQL statements
+--   - Startup.cs - DI configuration and middleware
+--       * Result: NO raw SQL statements
+-- 
+-- ============================================================================
+-- SEARCH PATTERNS USED
+-- ============================================================================
+-- 
+--   1. Inline SQL string literals containing keywords:
+--      "SELECT ", "INSERT ", "UPDATE ", "DELETE ", "CREATE ", "DROP ", "ALTER "
+--      Result: NONE FOUND
+-- 
+--   2. String concatenation SQL patterns:
+--      + "...FROM", + "...WHERE", + "...JOIN", + "...SET", + "...VALUES"
+--      Result: NONE FOUND
+-- 
+--   3. StringBuilder SQL construction:
+--      StringBuilder
+--      Result: NONE FOUND
+-- 
+--   4. EF raw SQL methods:
+--      ExecuteSqlRaw, ExecuteSqlCommand, SqlQuery, FromSqlRaw, FromSql
+--      Result: NONE FOUND
+-- 
+--   5. ADO.NET classes:
+--      SqlConnection, SqlCommand, SqlDataReader, SqlParameter
+--      Result: NONE FOUND (only NpgsqlConnectionFactory in DbConfiguration)
+-- 
+--   6. SQL Server imports:
+--      Microsoft.Data.SqlClient, System.Data.SqlClient
+--      Result: NONE FOUND
+-- 
+--   7. Direct database connections:
+--      new *Connection, OpenAsync, ConnectionString
+--      Result: Only EF6 NpgsqlConnectionFactory and Configuration.GetConnectionString() found
+-- 
+--   8. Transaction handling:
+--      BeginTransaction, CommitTransaction, RollbackTransaction, .Transaction
+--      Result: NONE FOUND
+-- 
+-- ============================================================================
+-- CONCLUSION
+-- ============================================================================
+-- 
+-- Total SQL statements extracted: 0
+-- 
+-- This application uses Entity Framework 6 with LINQ-to-Entities exclusively
+-- for all database operations. No raw SQL statements exist in the codebase.
+-- SQL generation is handled entirely by the EF6 Npgsql provider at runtime.
+-- ============================================================================

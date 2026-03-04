@@ -1,0 +1,55 @@
+{
+  "number_of_statements_processed": 0,
+  "number_of_statements_equivalent": 0,
+  "number_of_statements_non_equivalent": 0,
+  "number_of_statements_with_equivalency_error": 0,
+  "statement_details": [],
+  "metadata": {
+    "application": "GadgetsOnline",
+    "date": "2026-03-04",
+    "dms_migration_project_arn": "arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII",
+    "finding": "No raw SQL statements found in the codebase. This application uses Entity Framework 6 LINQ exclusively for all database access. All SQL generation is handled by the EF6 Npgsql provider at runtime. Therefore, no SQL statements required DMS conversion or equivalency validation.",
+    "extraction_summary": {
+      "total_files_scanned": 14,
+      "total_sql_statements_found": 0,
+      "search_patterns_used": [
+        "Inline SQL string literals (SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER)",
+        "StringBuilder SQL construction",
+        "EF raw SQL methods (ExecuteSqlRaw, ExecuteSqlCommand, SqlQuery, FromSqlRaw, FromSql)",
+        "ADO.NET classes (SqlConnection, SqlCommand, SqlDataReader, SqlParameter)",
+        "SQL Server imports (Microsoft.Data.SqlClient, System.Data.SqlClient)",
+        "Direct database connections (new *Connection, OpenAsync, ConnectionString)",
+        "Transaction handling (BeginTransaction, CommitTransaction, RollbackTransaction)",
+        "SQL string concatenation patterns (+ FROM, + WHERE, + JOIN, + SET, + VALUES)"
+      ]
+    },
+    "files_scanned": [
+      "Services/Inventory.cs",
+      "Services/ShoppingCart.cs",
+      "Services/OrderProcessing.cs",
+      "Controllers/CheckoutController.cs",
+      "Controllers/HomeController.cs",
+      "Controllers/ShoppingCartController.cs",
+      "Controllers/StoreController.cs",
+      "Components/CategoryMenuViewComponent.cs",
+      "Models/GadgetsOnlineEntities.cs",
+      "Models/GadgetsOnlineInitializer.cs",
+      "Models/Cart.cs",
+      "Models/Category.cs",
+      "Models/Product.cs",
+      "Models/Order.cs",
+      "Models/OrderDetail.cs",
+      "Startup.cs",
+      "Program.cs"
+    ],
+    "database_access_pattern": "Entity Framework 6 LINQ-to-Entities exclusively. No raw SQL, no ADO.NET direct access, no EF raw SQL methods.",
+    "ef6_provider_configuration": {
+      "provider": "Npgsql (EntityFramework6.Npgsql v6.4.3)",
+      "provider_services": "NpgsqlServices.Instance",
+      "connection_factory": "NpgsqlConnectionFactory",
+      "schema": "gadgetsonline_dbo",
+      "table_naming": "lowercase (products, categories, carts, orders, orderdetails)",
+      "column_naming": "lowercase"
+    }
+  }
+}
