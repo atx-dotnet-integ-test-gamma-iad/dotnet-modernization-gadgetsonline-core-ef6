@@ -1,0 +1,168 @@
+{
+  "number_of_statements_processed": 20,
+  "number_of_statements_equivalent": 0,
+  "number_of_statements_non_equivalent": 0,
+  "number_of_statements_with_equivalency_error": 20,
+  "statement_details": [
+    {
+      "original_statement": "SELECT TOP(@count) productid, categoryid, name, price, productarturl FROM products",
+      "converted_statement": "SELECT productid, categoryid, name, price, productarturl FROM products LIMIT @count",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:14:31.828972\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT categoryid, name, description FROM categories",
+      "converted_statement": "SELECT categoryid, name, description FROM categories",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:15:28.475184\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT p.productid, p.categoryid, p.name, p.price, p.productarturl FROM products p INNER JOIN categories c ON p.categoryid = c.categoryid WHERE c.name = @category",
+      "converted_statement": "SELECT p.productid, p.categoryid, p.name, p.price, p.productarturl FROM products p INNER JOIN categories c ON p.categoryid = c.categoryid WHERE c.name = @category",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:15:48.533232\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT TOP(1) productid, categoryid, name, price, productarturl FROM products WHERE productid = @id",
+      "converted_statement": "SELECT productid, categoryid, name, price, productarturl FROM products WHERE productid = @id LIMIT 1",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:16:00.267087\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT TOP(1) name FROM products WHERE productid = @id",
+      "converted_statement": "SELECT name FROM products WHERE productid = @id LIMIT 1",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:16:17.056713\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:16:29.231451\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT SUM(count) FROM carts WHERE cartid = @cartid",
+      "converted_statement": "SELECT SUM(count) FROM carts WHERE cartid = @cartid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:16:39.313441\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT SUM(c.count * p.price) FROM carts c INNER JOIN products p ON c.productid = p.productid WHERE c.cartid = @cartid",
+      "converted_statement": "SELECT SUM(c.count * p.price) FROM carts c INNER JOIN products p ON c.productid = p.productid WHERE c.cartid = @cartid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:16:59.067826\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT TOP(1) recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid AND productid = @productid",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid AND productid = @productid LIMIT 1",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:17:16.882178\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "INSERT INTO carts (cartid, productid, count, datecreated) VALUES (@cartid, @productid, 1, @datecreated)",
+      "converted_statement": "INSERT INTO carts (cartid, productid, count, datecreated) VALUES (@cartid, @productid, 1, @datecreated)",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:17:33.969620\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "UPDATE carts SET count = count + 1 WHERE cartid = @cartid AND productid = @productid",
+      "converted_statement": "UPDATE carts SET count = count + 1 WHERE cartid = @cartid AND productid = @productid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:17:45.904660\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "SELECT TOP(1) recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid AND productid = @productid",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM carts WHERE cartid = @cartid AND productid = @productid LIMIT 1",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:17:59.430627\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "UPDATE carts SET count = count - 1 WHERE cartid = @cartid AND productid = @productid",
+      "converted_statement": "UPDATE carts SET count = count - 1 WHERE cartid = @cartid AND productid = @productid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:18:16.098931\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "DELETE FROM carts WHERE cartid = @cartid AND productid = @productid",
+      "converted_statement": "DELETE FROM carts WHERE cartid = @cartid AND productid = @productid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:18:31.243441\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "DELETE FROM carts WHERE cartid = @cartid",
+      "converted_statement": "DELETE FROM carts WHERE cartid = @cartid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:18:45.105597\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "INSERT INTO orderdetails (productid, orderid, unitprice, quantity) VALUES (@productid, @orderid, @unitprice, @quantity)",
+      "converted_statement": "INSERT INTO orderdetails (productid, orderid, unitprice, quantity) VALUES (@productid, @orderid, @unitprice, @quantity)",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:18:55.708050\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "UPDATE orders SET total = @total WHERE orderid = @orderid",
+      "converted_statement": "UPDATE orders SET total = @total WHERE orderid = @orderid",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:19:09.644264\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "INSERT INTO orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderdate, @username, @firstname, @lastname, @address, @city, @state, @postalcode, @country, @phone, @email, @total)",
+      "converted_statement": "INSERT INTO orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderdate, @username, @firstname, @lastname, @address, @city, @state, @postalcode, @country, @phone, @email, @total)",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:19:27.107167\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "INSERT INTO categories (categoryid, name, description) VALUES (@categoryid, @name, @description)",
+      "converted_statement": "INSERT INTO categories (categoryid, name, description) VALUES (@categoryid, @name, @description)",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:19:42.161205\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    },
+    {
+      "original_statement": "INSERT INTO products (productid, categoryid, name, price, productarturl) VALUES (@productid, @categoryid, @name, @price, @productarturl)",
+      "converted_statement": "INSERT INTO products (productid, categoryid, name, price, productarturl) VALUES (@productid, @categoryid, @name, @price, @productarturl)",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-04T14:19:57.245405\"}",
+      "dms_failure_reason": "Metadata model creation failed: The selected objects were not found."
+    }
+  ]
+}
