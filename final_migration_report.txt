@@ -1,0 +1,140 @@
+================================================================================
+FINAL MIGRATION REPORT - GadgetsOnline SQL Server to PostgreSQL
+Date: 2026-03-04
+================================================================================
+
+MIGRATION OVERVIEW
+==================
+Application: GadgetsOnline (.NET 8.0 Web Application)
+Source Database: Microsoft SQL Server 2019
+Target Database: PostgreSQL 13
+Framework: Entity Framework 6 with Npgsql
+Migration Method: DMS MCP Tool with Manual Fallback
+
+BUILD STATUS
+=============
+Final Build: SUCCESS (0 errors, 0 warnings)
+Target Framework: net8.0
+
+PACKAGE MIGRATION
+==================
+| Package | Original | Migrated |
+|---------|----------|----------|
+| Npgsql | 4.1.3 | 8.0.6 |
+| EntityFramework6.Npgsql | 6.4.3 | 6.4.3 (unchanged) |
+| EntityFramework | 6.5.1 | 6.5.1 (unchanged) |
+| Microsoft.Data.SqlClient | N/A (not present) | N/A |
+
+SQL STATEMENT CONVERSION
+=========================
+Total SQL Statements Processed: 19
+DMS MCP Tool Successful Conversions: 0
+DMS MCP Tool Failed Conversions: 19
+Manual Conversions Applied: 19
+Conversion Method for All: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+DMS Failure Reason: Metadata model creation failed: The selected objects were not found.
+DMS Migration Project ARN: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+
+Manual Conversion Rules Applied:
+- Schema mapping: dbo -> gadgetsonline_dbo
+- All table names converted to lowercase
+- All column names converted to lowercase
+- SQL Server TOP(@count) converted to PostgreSQL LIMIT @count
+- All other SQL syntax preserved (already ANSI-compatible)
+
+SQL EQUIVALENCY VALIDATION
+============================
+Total Statement Pairs Validated: 19
+Equivalent: 0
+Non-Equivalent: 0
+Equivalency Errors: 19
+
+Note: All 19 equivalency validations returned ERROR with "'uniqueID'" from the 
+sql-equivalency___validate_sql_equivalence tool. This appears to be a tool-level
+issue rather than a statement conversion problem. All statements were processed
+through the tool as required. Agent judgment was NOT used to determine equivalency
+status; all results come directly from the tool output.
+
+SCHEMA MAPPING SUMMARY
+========================
+| MS SQL (dbo) | PostgreSQL (gadgetsonline_dbo) |
+|--------------|-------------------------------|
+| dbo.Products | gadgetsonline_dbo.products |
+| dbo.Categories | gadgetsonline_dbo.categories |
+| dbo.Carts | gadgetsonline_dbo.carts |
+| dbo.Orders | gadgetsonline_dbo.orders |
+| dbo.OrderDetails | gadgetsonline_dbo.orderdetails |
+
+COLUMN MAPPING (ALL LOWERCASE IN POSTGRESQL)
+=============================================
+Products: ProductId->productid, CategoryId->categoryid, Name->name, Price->price, ProductArtUrl->productarturl
+Categories: CategoryId->categoryid, Name->name, Description->description
+Carts: RecordId->recordid, CartId->cartid, ProductId->productid, Count->count, DateCreated->datecreated
+Orders: OrderId->orderid, OrderDate->orderdate, Username->username, FirstName->firstname, LastName->lastname, Address->address, City->city, State->state, PostalCode->postalcode, Country->country, Phone->phone, Email->email, Total->total
+OrderDetails: OrderDetailId->orderdetailid, OrderId->orderid, ProductId->productid, Quantity->quantity, UnitPrice->unitprice
+
+CONNECTION STRING MIGRATION
+============================
+Original Format: Server=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;Database=GadgetsOnline;User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;
+Migrated Format: Host=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;Database=postgres;Username=${DB_USER};Password=${DB_PASSWORD};
+
+PROVIDER CONFIGURATION
+========================
+app.config: Configured with Npgsql provider (Npgsql.NpgsqlServices, EntityFramework6.Npgsql)
+DbConfiguration: GadgetsOnlineEntitiesPostgreSqlConfiguration using NpgsqlServices.Instance
+Connection Factory: NpgsqlConnectionFactory
+
+CODE CHANGES SUMMARY
+=====================
+Files Modified:
+1. GadgetsOnline.csproj - Updated Npgsql from 4.1.3 to 8.0.6, removed incorrect using
+2. Models/GadgetsOnlineEntities.cs - Removed incorrect 'using Npgsql.EntityFramework6' (types are in 'Npgsql' namespace)
+3. Models/Product.cs - Already had [Table] and [Column] attributes for PostgreSQL
+4. Models/Category.cs - Already had [Table] and [Column] attributes for PostgreSQL
+5. Models/Cart.cs - Already had [Table] and [Column] attributes for PostgreSQL
+6. Models/Order.cs - Already had [Table] and [Column] attributes for PostgreSQL
+7. Models/OrderDetail.cs - Already had [Table] and [Column] attributes for PostgreSQL
+8. appsettings.json - Already had PostgreSQL connection string format
+9. app.config - Already had Npgsql provider configuration
+
+SQL Server References Remaining: NONE
+- No SqlConnection, SqlCommand, SqlDataReader, SqlParameter references
+- No Microsoft.Data.SqlClient or System.Data.SqlClient imports
+- No SQL Server package references
+
+TRANSFORMATION ARTIFACTS
+=========================
+1. extracted_statements.sql - 19 original MS SQL statements
+2. converted_statements.sql - 19 converted PostgreSQL statements
+3. sql_equivalency_validation_report.json - 19 statement pairs with tool results
+4. migration_log.txt - Detailed DMS call logs with timestamps
+5. final_migration_report.txt - This report
+
+STATEMENTS REQUIRING MANUAL REVIEW
+====================================
+All 19 statements require manual review because:
+1. DMS MCP tool failed for all statements (metadata model creation failed)
+2. SQL Equivalency tool returned ERROR for all statement pairs
+3. Manual conversions were applied following DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA rules
+
+Statement List:
+1. SELECT TOP(@count) * FROM dbo.Products -> SELECT * FROM gadgetsonline_dbo.products LIMIT @count
+2. SELECT * FROM dbo.Categories -> SELECT * FROM gadgetsonline_dbo.categories
+3. SELECT * FROM dbo.Products WHERE CategoryId IN (...) -> SELECT * FROM gadgetsonline_dbo.products WHERE categoryid IN (...)
+4. SELECT * FROM dbo.Products WHERE ProductId = @id -> SELECT * FROM gadgetsonline_dbo.products WHERE productid = @id
+5. SELECT Name FROM dbo.Products WHERE ProductId = @id -> SELECT name FROM gadgetsonline_dbo.products WHERE productid = @id
+6. SELECT * FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId -> SELECT * FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId
+7. INSERT INTO dbo.Carts (...) -> INSERT INTO gadgetsonline_dbo.carts (...)
+8. UPDATE dbo.Carts SET Count = Count + 1 -> UPDATE gadgetsonline_dbo.carts SET count = count + 1
+9. SELECT SUM(Count) FROM dbo.Carts -> SELECT SUM(count) FROM gadgetsonline_dbo.carts
+10. UPDATE dbo.Carts SET Count = Count - 1 -> UPDATE gadgetsonline_dbo.carts SET count = count - 1
+11. DELETE FROM dbo.Carts WHERE RecordId = @recordId -> DELETE FROM gadgetsonline_dbo.carts WHERE recordid = @recordId
+12. SELECT * FROM dbo.Carts WHERE CartId = @cartId -> SELECT * FROM gadgetsonline_dbo.carts WHERE cartid = @cartId
+13. SELECT SUM(c.Count * p.Price) ... JOIN ... -> SELECT SUM(c.count * p.price) ... JOIN ...
+14. DELETE FROM dbo.Carts WHERE CartId = @cartId -> DELETE FROM gadgetsonline_dbo.carts WHERE cartid = @cartId
+15. INSERT INTO dbo.OrderDetails (...) -> INSERT INTO gadgetsonline_dbo.orderdetails (...)
+16. UPDATE dbo.Orders SET Total = @total -> UPDATE gadgetsonline_dbo.orders SET total = @total
+17. INSERT INTO dbo.Orders (...) -> INSERT INTO gadgetsonline_dbo.orders (...)
+18. INSERT INTO dbo.Categories (...) -> INSERT INTO gadgetsonline_dbo.categories (...)
+19. INSERT INTO dbo.Products (...) -> INSERT INTO gadgetsonline_dbo.products (...)

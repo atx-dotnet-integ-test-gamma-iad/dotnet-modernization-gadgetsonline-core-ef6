@@ -1,0 +1,181 @@
+================================================================================
+MIGRATION LOG - GadgetsOnline SQL Server to PostgreSQL
+Date: 2026-03-04
+DMS Migration Project: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+Region: us-east-1
+Database: GadgetsOnline
+Source Schema: dbo
+Target Schema: gadgetsonline_dbo
+================================================================================
+
+SUMMARY:
+- Total Statements Processed: 19
+- DMS Successful Conversions: 0
+- DMS Failed Conversions: 19
+- Manual Conversions Applied: 19
+- DMS Error: Metadata model creation failed: The selected objects were not found.
+- Manual Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+MANUAL CONVERSION RULES APPLIED:
+1. Schema mapping: dbo -> gadgetsonline_dbo (matching existing EF model OnModelCreating)
+2. All table names converted to lowercase (Products->products, Categories->categories, etc.)
+3. All column names converted to lowercase (ProductId->productid, CategoryId->categoryid, etc.)
+4. SQL Server TOP(@count) converted to PostgreSQL LIMIT @count
+5. All other SQL syntax is PostgreSQL-compatible (standard ANSI SQL)
+
+================================================================================
+DETAILED LOG - PER STATEMENT DMS CALLS (Step 2 - Retry)
+================================================================================
+
+--- Statement 1: GetBestSellers ---
+Original: SELECT TOP(@count) * FROM dbo.Products;
+DMS Call: 2026-03-04T22:15:21
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.products LIMIT @count;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+Notes: TOP(@count) converted to LIMIT @count (PostgreSQL syntax)
+
+--- Statement 2: GetAllCategories ---
+Original: SELECT * FROM dbo.Categories;
+DMS Call: 2026-03-04T22:15:46
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.categories;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 3: GetAllProductsInCategory ---
+Original: SELECT * FROM dbo.Products WHERE CategoryId IN (SELECT CategoryId FROM dbo.Categories WHERE Name = @category);
+DMS Call: 2026-03-04T22:16:10
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.products WHERE categoryid IN (SELECT categoryid FROM gadgetsonline_dbo.categories WHERE name = @category);
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 4: GetProductById ---
+Original: SELECT * FROM dbo.Products WHERE ProductId = @id;
+DMS Call: 2026-03-04T22:16:37
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.products WHERE productid = @id;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 5: GetProductNameById ---
+Original: SELECT Name FROM dbo.Products WHERE ProductId = @id;
+DMS Call: 2026-03-04T22:17:00
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT name FROM gadgetsonline_dbo.products WHERE productid = @id;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 6: AddToCart lookup ---
+Original: SELECT * FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;
+DMS Call: 2026-03-04T22:17:24
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 7: AddToCart insert ---
+Original: INSERT INTO dbo.Carts (CartId, ProductId, Count, DateCreated) VALUES (@cartId, @productId, 1, @dateCreated);
+DMS Call: 2026-03-04T22:17:47
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: INSERT INTO gadgetsonline_dbo.carts (cartid, productid, count, datecreated) VALUES (@cartId, @productId, 1, @dateCreated);
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 8: AddToCart update ---
+Original: UPDATE dbo.Carts SET Count = Count + 1 WHERE RecordId = @recordId;
+DMS Call: 2026-03-04T22:18:10
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: UPDATE gadgetsonline_dbo.carts SET count = count + 1 WHERE recordid = @recordId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 9: GetCount ---
+Original: SELECT SUM(Count) FROM dbo.Carts WHERE CartId = @cartId;
+DMS Call: 2026-03-04T22:18:33
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT SUM(count) FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 10: RemoveFromCart decrement ---
+Original: UPDATE dbo.Carts SET Count = Count - 1 WHERE RecordId = @recordId;
+DMS Call: 2026-03-04T22:18:57
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: UPDATE gadgetsonline_dbo.carts SET count = count - 1 WHERE recordid = @recordId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 11: RemoveFromCart delete ---
+Original: DELETE FROM dbo.Carts WHERE RecordId = @recordId;
+DMS Call: 2026-03-04T22:19:21
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: DELETE FROM gadgetsonline_dbo.carts WHERE recordid = @recordId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 12: GetCartItems ---
+Original: SELECT * FROM dbo.Carts WHERE CartId = @cartId;
+DMS Call: 2026-03-04T22:19:45
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT * FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 13: GetTotal ---
+Original: SELECT SUM(c.Count * p.Price) FROM dbo.Carts c JOIN dbo.Products p ON c.ProductId = p.ProductId WHERE c.CartId = @cartId;
+DMS Call: 2026-03-04T22:20:08
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: SELECT SUM(c.count * p.price) FROM gadgetsonline_dbo.carts c JOIN gadgetsonline_dbo.products p ON c.productid = p.productid WHERE c.cartid = @cartId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 14: EmptyCart ---
+Original: DELETE FROM dbo.Carts WHERE CartId = @cartId;
+DMS Call: 2026-03-04T22:20:40
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: DELETE FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 15: CreateOrder insert order detail ---
+Original: INSERT INTO dbo.OrderDetails (ProductId, OrderId, UnitPrice, Quantity) VALUES (@productId, @orderId, @unitPrice, @quantity);
+DMS Call: 2026-03-04T22:21:04
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: INSERT INTO gadgetsonline_dbo.orderdetails (productid, orderid, unitprice, quantity) VALUES (@productId, @orderId, @unitPrice, @quantity);
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 16: CreateOrder update order total ---
+Original: UPDATE dbo.Orders SET Total = @total WHERE OrderId = @orderId;
+DMS Call: 2026-03-04T22:21:27
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: UPDATE gadgetsonline_dbo.orders SET total = @total WHERE orderid = @orderId;
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 17: ProcessOrder insert order ---
+Original: INSERT INTO dbo.Orders (OrderDate, Username, FirstName, LastName, Address, City, State, PostalCode, Country, Phone, Email, Total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);
+DMS Call: 2026-03-04T22:21:51
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: INSERT INTO gadgetsonline_dbo.orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 18: Seed Categories ---
+Original: INSERT INTO dbo.Categories (CategoryId, Name, Description) VALUES (1, 'Mobile Phones', 'Latest collection of Mobile Phones');
+DMS Call: 2026-03-04T22:22:14
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: INSERT INTO gadgetsonline_dbo.categories (categoryid, name, description) VALUES (1, 'Mobile Phones', 'Latest collection of Mobile Phones');
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+
+--- Statement 19: Seed Products ---
+Original: INSERT INTO dbo.Products (ProductId, CategoryId, Name, Price, ProductArtUrl) VALUES (1, 1, 'Phone 12', 699.00, '/Content/Images/Mobile/1.jpg');
+DMS Call: 2026-03-04T22:22:38
+DMS Status: ERROR
+DMS Error: Metadata model creation failed: {'error': "Metadata model creation failed: {'default_error_details': {'message': 'The selected objects were not found.'}}"}
+Manual Conversion: INSERT INTO gadgetsonline_dbo.products (productid, categoryid, name, price, productarturl) VALUES (1, 1, 'Phone 12', 699.00, '/Content/Images/Mobile/1.jpg');
+Conversion Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
