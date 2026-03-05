@@ -1,0 +1,62 @@
+-- =============================================================================
+-- Extracted SQL Statements from GadgetsOnline Application
+-- Date: 2026-03-05
+-- =============================================================================
+--
+-- FINDING: The GadgetsOnline application uses Entity Framework 6 (v6.5.1) with
+-- LINQ queries for ALL database access. There are NO inline raw SQL strings,
+-- SqlCommand objects, StringBuilder-constructed SQL, parameterized SQL strings,
+-- or any direct ADO.NET database access code in the codebase.
+--
+-- All database operations are performed through EF6 DbContext (GadgetsOnlineEntities)
+-- using LINQ expressions. EF6 generates SQL internally at runtime based on the
+-- entity model mappings configured in OnModelCreating().
+--
+-- VERIFICATION:
+--   1. Searched all .cs files for SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER,
+--      DROP, EXEC keywords in string literals - NONE FOUND
+--   2. Searched for SqlCommand, SqlConnection, SqlDataReader, SqlParameter - NONE FOUND
+--   3. Searched for System.Data.SqlClient, Microsoft.Data.SqlClient imports - NONE FOUND
+--   4. Searched for StringBuilder SQL construction patterns - NONE FOUND
+--   5. Searched for ExecuteReader, ExecuteNonQuery, ExecuteScalar - NONE FOUND
+--   6. Searched for CommandText assignments - NONE FOUND
+--
+-- CONFIGURATION VERIFICATION (Already migrated to PostgreSQL):
+--   - GadgetsOnline.csproj: Npgsql v5.0.18, EntityFramework6.Npgsql v6.4.3
+--   - GadgetsOnlineEntities.cs: NpgsqlServices and NpgsqlConnectionFactory configured
+--   - appsettings.json: PostgreSQL connection string format (Host=...;Database=...)
+--   - app.config: Npgsql provider configured
+--   - All entity models: lowercase table/column names with gadgetsonline_dbo schema
+--
+-- The following are the LINQ-based data access operations that EF6 translates to
+-- SQL at runtime. These are documented for completeness but are NOT extractable
+-- SQL strings from the source code:
+--
+-- Services/Inventory.cs:
+--   - GetBestSellers: _gadgetsOnlineEntities.Products.Take(count).ToList()
+--   - GetAllCategories: _gadgetsOnlineEntities.Categories.ToList()
+--   - GetAllProductsInCategory: _gadgetsOnlineEntities.Products.Where(p => p.Category.Name == category).ToList()
+--   - GetProductById: _gadgetsOnlineEntities.Products.Where(p => p.ProductId == id).FirstOrDefault()
+--   - GetProductNameById: _gadgetsOnlineEntities.Products.Where(p => p.ProductId == id).FirstOrDefault().Name
+--
+-- Services/ShoppingCart.cs:
+--   - GetCartItems: _gadgetsOnlineEntities.Carts.Where(cart => cart.CartId == ShoppingCartId).ToList()
+--   - AddToCart (lookup): _gadgetsOnlineEntities.Carts.SingleOrDefault(c => c.CartId == ShoppingCartId && c.ProductId == id)
+--   - AddToCart (insert): _gadgetsOnlineEntities.Carts.Add(cartItem)
+--   - GetCount: LINQ from/where/select Sum over Carts.Count
+--   - GetTotal: LINQ from/where/select Sum over Carts.Count * Product.Price
+--   - RemoveFromCart (lookup): _gadgetsOnlineEntities.Carts.Single(...)
+--   - RemoveFromCart (update): cartItem.Count-- + SaveChanges
+--   - RemoveFromCart (delete): _gadgetsOnlineEntities.Carts.Remove(cartItem)
+--   - EmptyCart: foreach Remove + SaveChanges
+--   - CreateOrder (insert details): _gadgetsOnlineEntities.OrderDetails.Add(orderDetail)
+--
+-- Services/OrderProcessing.cs:
+--   - ProcessOrder: _gadgetsOnlineEntities.Orders.Add(order) + SaveChanges
+--
+-- Models/GadgetsOnlineInitializer.cs:
+--   - Seed: context.Categories.Add(...) and context.Products.Add(...)
+--
+-- TOTAL EXPLICIT SQL STATEMENTS: 0
+-- All database operations are LINQ-based through EF6 DbContext.
+-- =============================================================================
