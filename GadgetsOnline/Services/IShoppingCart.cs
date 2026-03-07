@@ -12,5 +12,7 @@ namespace GadgetsOnline.Services
         List<Cart> GetCartItems();
         int GetCount();
         decimal GetTotal();
+        int RemoveFromCart(int id);
+        int CreateOrder(Order order);
     }
 }
