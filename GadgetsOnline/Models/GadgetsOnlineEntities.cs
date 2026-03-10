@@ -1,9 +1,24 @@
-using GadgetsOnline.Models;
+﻿using GadgetsOnline.Models;
+using Npgsql;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GadgetsOnline.Models
 {
+    public class GadgetsOnlineEntitiesPostgreSqlConfiguration : DbConfiguration
+    {
+        public GadgetsOnlineEntitiesPostgreSqlConfiguration()
+        {
+            SetProviderServices("Npgsql", Npgsql.NpgsqlServices.Instance);
+            SetDefaultConnectionFactory(new Npgsql.NpgsqlConnectionFactory());
+        }
+    }
+
+    [DbConfigurationType(typeof(GadgetsOnlineEntitiesPostgreSqlConfiguration))]
     public class GadgetsOnlineEntities : DbContext
     {
         // Default constructor using connection string name from config
@@ -26,6 +41,36 @@ namespace GadgetsOnline.Models
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        public override int SaveChanges()
+        {
+            FixDateTimeKinds();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            FixDateTimeKinds();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void FixDateTimeKinds()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach (var entry in entries)
+            {
+                foreach (var property in entry.CurrentValues.PropertyNames)
+                {
+                    var value = entry.CurrentValues[property];
+                    if (value is DateTime dateTime && dateTime.Kind != DateTimeKind.Utc)
+                    {
+                        entry.CurrentValues[property] = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+                    }
+                }
+            }
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -55,4 +100,3 @@ namespace GadgetsOnline.Models
 
 
 }
-
