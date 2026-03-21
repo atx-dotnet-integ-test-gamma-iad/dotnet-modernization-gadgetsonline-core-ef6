@@ -1,0 +1,179 @@
+================================================================================
+FINAL MIGRATION REPORT
+GadgetsOnline - Microsoft SQL Server to PostgreSQL Migration
+================================================================================
+
+1. EXECUTIVE SUMMARY
+================================================================================
+The GadgetsOnline ASP.NET Core web application has been migrated from Microsoft
+SQL Server to PostgreSQL. The application uses Entity Framework 6 (EF6) for
+database access exclusively - no raw inline SQL statements exist in the codebase.
+
+All database access is performed through EF6 LINQ operations, which have been
+mapped to their SQL Server and PostgreSQL equivalents for analysis and validation.
+The migration involved:
+  - Replacing SQL Server packages (Microsoft.Data.SqlClient) with Npgsql
+  - Configuring EF6 for PostgreSQL using EntityFramework6.Npgsql
+  - Mapping all entity models to PostgreSQL schema (gadgetsonline_dbo) with
+    lowercase table/column names
+  - Updating connection strings from SQL Server to PostgreSQL format
+  - Implementing DateTime UTC handling for PostgreSQL compatibility
+
+2. SQL STATEMENT PROCESSING
+================================================================================
+Total SQL statements cataloged: 21
+
+Breakdown by source file:
+  - Services/Inventory.cs:                  5 statements
+  - Services/ShoppingCart.cs:              13 statements
+  - Services/OrderProcessing.cs:            1 statement
+  - Models/GadgetsOnlineInitializer.cs:     2 statements
+
+Breakdown by statement type:
+  - SELECT:   9 statements (Statements 1-9, 12, 15)
+  - INSERT:   6 statements (Statements 10, 17, 19, 20, 21)
+  - UPDATE:   4 statements (Statements 11, 13, 18)
+  - DELETE:   2 statements (Statements 14, 16)
+
+Note: Some SELECT statements use TOP (SQL Server) which were converted to
+LIMIT (PostgreSQL). Statements 9/12, 11/13, 6/15, and 14/16 are semantically
+equivalent pairs used in different code paths (AddToCart/RemoveFromCart,
+EmptyCart).
+
+3. DMS CONVERSION RESULTS
+================================================================================
+DMS Tool Used: dms-mcp___statement_conversion_tool
+Migration Project: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+Database: GadgetsOnline
+Schema: dbo
+Server: gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com
+
+Total DMS conversion attempts:     21
+Successful DMS conversions:         0
+Failed DMS conversions:            21
+
+DMS Error (all 21 statements):
+  "Metadata model creation failed: No objects were found according to the
+   specified selection rules. Please review your selection rules and try again."
+
+Manual Conversion Applied:         21
+Method: DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA
+  - Schema mapping: dbo -> gadgetsonline_dbo
+  - Table names lowercased: Products -> products, Categories -> categories,
+    Carts -> carts, Orders -> orders, OrderDetails -> orderdetails
+  - Column names already lowercase in source
+  - SQL Server TOP(n) -> PostgreSQL LIMIT n
+
+4. SQL EQUIVALENCY VALIDATION RESULTS
+================================================================================
+Equivalency Tool Used: sql-equivalency___validate_sql_equivalence
+
+Total pairs validated:              21
+EQUIVALENT:                          0
+NOT_EQUIVALENT:                      0
+ERROR:                              21
+
+All 21 pairs returned ERROR with: {"equivalence_status": "ERROR", "error": "'uniqueID'"}
+This is a tool-side error unrelated to statement content or conversion quality.
+All equivalency statuses come EXCLUSIVELY from the tool output (no agent judgment).
+
+5. PACKAGE DEPENDENCY CHANGES
+================================================================================
+Removed:
+  - Microsoft.Data.SqlClient (no longer referenced)
+  - System.Data.SqlClient (no longer referenced)
+
+Added:
+  - Npgsql 5.0.18
+  - EntityFramework6.Npgsql 6.4.3
+
+Retained:
+  - Microsoft.AspNetCore.Hosting.Abstractions 2.3.0
+  - Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.17.0
+
+6. CONNECTION STRING UPDATES
+================================================================================
+Before (SQL Server format):
+  Server=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;
+  Database=GadgetsOnline;Integrated Security=true
+
+After (PostgreSQL format):
+  Host=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;
+  Database=postgres;Username=${DB_USER};Password=${DB_PASSWORD};
+
+Location: appsettings.json -> ConnectionStrings -> GadgetsOnlineEntities
+
+7. EF6 MODEL CONFIGURATION STATUS
+================================================================================
+GadgetsOnlineEntities.cs:
+  [✓] GadgetsOnlineEntitiesPostgreSqlConfiguration with NpgsqlServices
+  [✓] NpgsqlConnectionFactory as default connection factory
+  [✓] DbConfigurationType attribute applied
+  [✓] OnModelCreating maps all 5 entities to gadgetsonline_dbo schema
+  [✓] DateTime UTC fixing in SaveChanges/SaveChangesAsync
+  [✓] Lazy loading and proxy creation enabled
+
+Model Entity Mappings:
+  [✓] Product.cs   -> gadgetsonline_dbo.products   (5 columns mapped)
+  [✓] Category.cs  -> gadgetsonline_dbo.categories  (3 columns mapped)
+  [✓] Cart.cs      -> gadgetsonline_dbo.carts       (5 columns mapped)
+  [✓] Order.cs     -> gadgetsonline_dbo.orders       (13 columns mapped)
+  [✓] OrderDetail.cs -> gadgetsonline_dbo.orderdetails (5 columns mapped)
+
+app.config:
+  [✓] Npgsql provider registered in entityFramework/providers
+  [✓] NpgsqlConnectionFactory as defaultConnectionFactory
+  [✓] NpgsqlFactory registered in DbProviderFactories
+
+8. BUILD STATUS
+================================================================================
+Build command: dotnet build GadgetsOnline.sln
+Result: Build succeeded
+Warnings: 0
+Errors: 0
+
+9. SQL SERVER REFERENCE SCAN
+================================================================================
+Scan command: grep -rn for SqlConnection, SqlCommand, SqlDataReader,
+SqlParameter, Microsoft.Data.SqlClient, System.Data.SqlClient in *.cs, *.csproj,
+*.config, *.json files (excluding bin/, obj/, and migration artifact files)
+
+Result: 0 SQL Server references remaining
+
+10. GENERATED ARTIFACTS
+================================================================================
+  1. extracted_statements.sql          - 21 original MS SQL Server statements
+  2. converted_statements.sql          - 21 converted PostgreSQL statements
+  3. migration_log.txt                 - Detailed per-statement DMS log
+  4. sql_equivalency_validation_report.json - JSON report with all 21 pairs
+  5. final_migration_report.txt        - This comprehensive report
+
+11. ARTIFACT CROSS-VALIDATION
+================================================================================
+  extracted_statements.sql:             21 entries [✓]
+  converted_statements.sql:             21 entries [✓]
+  sql_equivalency_validation_report.json: 21 statement_details entries [✓]
+  migration_log.txt:                    21 per-statement entries [✓]
+
+Cross-validation result: ALL ARTIFACTS CONSISTENT (21 statements in each)
+
+12. STATEMENTS REQUIRING MANUAL REVIEW
+================================================================================
+All 21 statements require manual review because:
+  a) DMS conversion failed for all 21 - manual conversion was applied using
+     lowercase schema mapping rules (DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA)
+  b) SQL Equivalency tool returned ERROR for all 21 pairs due to a tool-side
+     error ("'uniqueID'") - equivalency could not be confirmed by the tool
+
+The manual conversions are straightforward schema/syntax mappings:
+  - Schema: dbo -> gadgetsonline_dbo
+  - Table names: lowercased
+  - SQL Server TOP(n) -> PostgreSQL LIMIT n
+  - All other SQL syntax is ANSI-standard and compatible with both databases
+
+Recommendation: Manual testing of all 21 operations against the PostgreSQL
+database is advised to confirm functional equivalency.
+
+================================================================================
+END OF REPORT
+================================================================================
