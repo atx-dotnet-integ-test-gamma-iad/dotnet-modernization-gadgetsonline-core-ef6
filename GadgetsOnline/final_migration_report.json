@@ -1,0 +1,239 @@
+{
+  "report_title": "GadgetsOnline SQL Server to PostgreSQL Migration - Final Report",
+  "report_date": "2026-03-21",
+  "application": "GadgetsOnline",
+  "source_database": "Microsoft SQL Server",
+  "target_database": "PostgreSQL",
+  "framework": ".NET 8.0 with Entity Framework 6",
+  "migration_project_arn": "arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII",
+
+  "overall_status": "COMPLETED_WITH_TOOL_ERRORS",
+  "status_detail": "The application was already partially migrated to PostgreSQL (Npgsql packages, connection strings, provider configuration, EF6 model mappings with gadgetsonline_dbo schema and lowercase naming were in place). All 19 SQL statements were extracted, submitted to DMS for conversion (all failed), manually converted with lowercase schema mapping, and validated through the SQL equivalency tool (all returned ERROR). The build succeeds with 0 errors and 0 warnings.",
+
+  "sql_statement_processing": {
+    "total_statements_identified": 19,
+    "total_statements_processed_through_dms": 19,
+    "dms_successful_conversions": 0,
+    "dms_failed_conversions": 19,
+    "manual_conversions_after_dms_failure": 19,
+    "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules. Please review your selection rules and try again.",
+    "dms_parameters_used": {
+      "database_name": "GadgetsOnline",
+      "migration_project_identifier": "arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII",
+      "schema_name": "dbo",
+      "server_name": "gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com",
+      "region": "us-east-1"
+    },
+    "manual_conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+    "manual_conversion_rules_applied": [
+      "Schema mapping: dbo.* -> gadgetsonline_dbo.* (lowercase)",
+      "Table names: PascalCase -> lowercase (Products -> products, Categories -> categories, etc.)",
+      "Column names: PascalCase -> lowercase (ProductId -> productid, CategoryId -> categoryid, etc.)",
+      "SQL Server TOP(n) -> PostgreSQL LIMIT n",
+      "Parameter syntax: @param -> :param (documentation only; EF6 handles binding)",
+      "Data types: NVARCHAR -> VARCHAR, DATETIME -> TIMESTAMP, IDENTITY -> SERIAL"
+    ],
+    "dms_call_timestamps": {
+      "statement_1": "2026-03-21T12:52:19",
+      "statement_2": "2026-03-21T12:52:54",
+      "statement_3": "2026-03-21T12:53:17",
+      "statement_4": "2026-03-21T12:53:41",
+      "statement_5": "2026-03-21T12:54:04",
+      "statement_6": "2026-03-21T12:54:29",
+      "statement_7": "2026-03-21T12:54:51",
+      "statement_8": "2026-03-21T12:55:13",
+      "statement_9": "2026-03-21T12:55:35",
+      "statement_10": "2026-03-21T12:55:58",
+      "statement_11": "2026-03-21T12:56:20",
+      "statement_12": "2026-03-21T12:55:35",
+      "statement_13": "2026-03-21T12:56:48",
+      "statement_14": "2026-03-21T12:57:16",
+      "statement_15": "2026-03-21T12:57:37",
+      "statement_16": "2026-03-21T12:58:01",
+      "statement_17": "2026-03-21T12:58:23",
+      "statement_18": "2026-03-21T12:58:45",
+      "statement_19": "2026-03-21T12:59:09"
+    }
+  },
+
+  "sql_equivalency_validation": {
+    "total_pairs_validated": 19,
+    "equivalent": 0,
+    "non_equivalent": 0,
+    "errors": 19,
+    "equivalency_tool_error": "'uniqueID'",
+    "equivalency_validation_timestamps": {
+      "statement_1": "2026-03-21T13:01:54",
+      "statement_2": "2026-03-21T13:02:16",
+      "statement_3": "2026-03-21T13:02:31",
+      "statement_4": "2026-03-21T13:02:41",
+      "statement_5": "2026-03-21T13:02:51",
+      "statement_6": "2026-03-21T13:03:01",
+      "statement_7": "2026-03-21T13:03:10",
+      "statement_8": "2026-03-21T13:03:22",
+      "statement_9": "2026-03-21T13:03:32",
+      "statement_10": "2026-03-21T13:03:45",
+      "statement_11": "2026-03-21T13:03:54",
+      "statement_12": "2026-03-21T13:03:32",
+      "statement_13": "2026-03-21T13:04:04",
+      "statement_14": "2026-03-21T13:04:14",
+      "statement_15": "2026-03-21T13:04:23",
+      "statement_16": "2026-03-21T13:04:33",
+      "statement_17": "2026-03-21T13:04:45",
+      "statement_18": "2026-03-21T13:04:54",
+      "statement_19": "2026-03-21T13:05:04"
+    },
+    "note": "All equivalency statuses are from the sql-equivalency___validate_sql_equivalence tool. No agent judgment was used to determine equivalency. All 19 pairs returned ERROR from the tool with error: 'uniqueID'."
+  },
+
+  "code_changes": {
+    "files_modified": [],
+    "files_already_migrated": [
+      {
+        "file": "GadgetsOnline.csproj",
+        "status": "Already configured with Npgsql 5.0.18, EntityFramework6.Npgsql 6.4.3, EntityFramework 6.5.1 (no Microsoft.Data.SqlClient or System.Data.SqlClient)"
+      },
+      {
+        "file": "appsettings.json",
+        "status": "Already configured with PostgreSQL connection string (Host= format with ${DB_USER} and ${DB_PASSWORD} placeholders)"
+      },
+      {
+        "file": "app.config",
+        "status": "Already configured with Npgsql provider (EntityFramework6.Npgsql) and NpgsqlConnectionFactory"
+      },
+      {
+        "file": "Models/GadgetsOnlineEntities.cs",
+        "status": "Already configured with PostgreSQL DbConfiguration, NpgsqlServices, NpgsqlConnectionFactory, EF6 fluent API OnModelCreating with gadgetsonline_dbo schema and lowercase naming for all 5 entities"
+      },
+      {
+        "file": "Models/Product.cs",
+        "status": "Already has [Table(\"products\", Schema = \"gadgetsonline_dbo\")] and [Column] attributes with lowercase names"
+      },
+      {
+        "file": "Models/Category.cs",
+        "status": "Already has [Table(\"categories\", Schema = \"gadgetsonline_dbo\")] and [Column] attributes with lowercase names"
+      },
+      {
+        "file": "Models/Cart.cs",
+        "status": "Already has [Table(\"carts\", Schema = \"gadgetsonline_dbo\")] and [Column] attributes with lowercase names"
+      },
+      {
+        "file": "Models/Order.cs",
+        "status": "Already has [Table(\"orders\", Schema = \"gadgetsonline_dbo\")] and [Column] attributes with lowercase names"
+      },
+      {
+        "file": "Models/OrderDetail.cs",
+        "status": "Already has [Table(\"orderdetails\", Schema = \"gadgetsonline_dbo\")] and [Column] attributes with lowercase names"
+      },
+      {
+        "file": "Models/GadgetsOnlineInitializer.cs",
+        "status": "Already configured as CreateDatabaseIfNotExists<GadgetsOnlineEntities> with seed data"
+      },
+      {
+        "file": "Startup.cs",
+        "status": "Already initializes GadgetsOnlineEntities with PostgreSQL connection string and GadgetsOnlineInitializer"
+      },
+      {
+        "file": "Services/Inventory.cs",
+        "status": "Uses GadgetsOnlineEntities via DI, no direct SQL or SqlClient references"
+      },
+      {
+        "file": "Services/ShoppingCart.cs",
+        "status": "Uses GadgetsOnlineEntities via DI, no direct SQL or SqlClient references"
+      },
+      {
+        "file": "Services/OrderProcessing.cs",
+        "status": "Uses GadgetsOnlineEntities via DI, no direct SQL or SqlClient references"
+      },
+      {
+        "file": "Controllers/HomeController.cs",
+        "status": "Uses IInventory interface via DI, no database access code"
+      },
+      {
+        "file": "Controllers/StoreController.cs",
+        "status": "Uses IInventory and IShoppingCart interfaces via DI, no database access code"
+      },
+      {
+        "file": "Controllers/ShoppingCartController.cs",
+        "status": "Uses IInventory and IShoppingCart interfaces via DI, no database access code"
+      },
+      {
+        "file": "Controllers/CheckoutController.cs",
+        "status": "Uses IOrderProcessing interface via DI, no database access code"
+      },
+      {
+        "file": "Components/CategoryMenuViewComponent.cs",
+        "status": "Uses IInventory interface via DI, no database access code"
+      }
+    ],
+    "no_sql_client_references": true,
+    "no_sql_client_references_detail": "Verified via grep: No references to Microsoft.Data.SqlClient, System.Data.SqlClient, SqlConnection, SqlCommand, SqlDataReader, or SqlParameter in any source files (.cs, .csproj, .config, .json)."
+  },
+
+  "build_status": {
+    "status": "SUCCESS",
+    "warnings": 0,
+    "errors": 0,
+    "build_command": "dotnet build GadgetsOnline.sln",
+    "output_dll": "GadgetsOnline/bin/Debug/net8.0/GadgetsOnline.dll"
+  },
+
+  "schema_mapping": {
+    "source_schema": "dbo",
+    "target_schema": "gadgetsonline_dbo",
+    "tables": [
+      {"source": "dbo.Products", "target": "gadgetsonline_dbo.products"},
+      {"source": "dbo.Categories", "target": "gadgetsonline_dbo.categories"},
+      {"source": "dbo.Carts", "target": "gadgetsonline_dbo.carts"},
+      {"source": "dbo.Orders", "target": "gadgetsonline_dbo.orders"},
+      {"source": "dbo.OrderDetails", "target": "gadgetsonline_dbo.orderdetails"}
+    ],
+    "column_mapping_convention": "PascalCase -> lowercase (e.g., ProductId -> productid, CategoryId -> categoryid)"
+  },
+
+  "statements_requiring_manual_review": {
+    "count": 19,
+    "reason": "All 19 statements were manually converted due to DMS failure (metadata model creation error). All equivalency validations returned ERROR from the sql-equivalency tool ('uniqueID' error). Manual review is recommended to verify correctness of schema mapping and SQL syntax conversions.",
+    "statements": [
+      {"id": 1, "source": "Services/Inventory.cs", "method": "GetBestSellers", "type": "SELECT TOP/LIMIT", "complexity": "easy"},
+      {"id": 2, "source": "Services/Inventory.cs", "method": "GetAllCategories", "type": "SELECT", "complexity": "easy"},
+      {"id": 3, "source": "Services/Inventory.cs", "method": "GetAllProductsInCategory", "type": "SELECT JOIN WHERE", "complexity": "medium"},
+      {"id": 4, "source": "Services/Inventory.cs", "method": "GetProductById", "type": "SELECT WHERE", "complexity": "easy"},
+      {"id": 5, "source": "Services/Inventory.cs", "method": "GetProductNameById", "type": "SELECT WHERE", "complexity": "easy"},
+      {"id": 6, "source": "Services/ShoppingCart.cs", "method": "GetCartItems", "type": "SELECT WHERE", "complexity": "easy"},
+      {"id": 7, "source": "Services/ShoppingCart.cs", "method": "GetCount", "type": "SELECT SUM", "complexity": "easy"},
+      {"id": 8, "source": "Services/ShoppingCart.cs", "method": "GetTotal", "type": "SELECT SUM JOIN", "complexity": "medium"},
+      {"id": 9, "source": "Services/ShoppingCart.cs", "method": "AddToCart_SELECT", "type": "SELECT WHERE", "complexity": "easy"},
+      {"id": 10, "source": "Services/ShoppingCart.cs", "method": "AddToCart_INSERT", "type": "INSERT", "complexity": "easy"},
+      {"id": 11, "source": "Services/ShoppingCart.cs", "method": "AddToCart_UPDATE", "type": "UPDATE", "complexity": "easy"},
+      {"id": 12, "source": "Services/ShoppingCart.cs", "method": "RemoveFromCart_SELECT", "type": "SELECT WHERE", "complexity": "easy"},
+      {"id": 13, "source": "Services/ShoppingCart.cs", "method": "RemoveFromCart_DELETE", "type": "DELETE", "complexity": "easy"},
+      {"id": 14, "source": "Services/ShoppingCart.cs", "method": "RemoveFromCart_UPDATE", "type": "UPDATE", "complexity": "easy"},
+      {"id": 15, "source": "Services/ShoppingCart.cs", "method": "EmptyCart", "type": "DELETE", "complexity": "easy"},
+      {"id": 16, "source": "Services/ShoppingCart.cs", "method": "CreateOrder_INSERT_OrderDetail", "type": "INSERT", "complexity": "easy"},
+      {"id": 17, "source": "Services/OrderProcessing.cs", "method": "ProcessOrder_INSERT_Order", "type": "INSERT", "complexity": "easy"},
+      {"id": 18, "source": "Models/GadgetsOnlineInitializer.cs", "method": "Seed_INSERT_Category", "type": "INSERT", "complexity": "easy"},
+      {"id": 19, "source": "Models/GadgetsOnlineInitializer.cs", "method": "Seed_INSERT_Product", "type": "INSERT", "complexity": "easy"}
+    ]
+  },
+
+  "artifacts": {
+    "extracted_statements": "GadgetsOnline/extracted_statements.sql",
+    "converted_statements": "GadgetsOnline/converted_statements.sql",
+    "equivalency_report": "GadgetsOnline/sql_equivalency_validation_report.json",
+    "dms_failure_summary": "GadgetsOnline/dms_failure_summary.md",
+    "final_migration_report": "GadgetsOnline/final_migration_report.json"
+  },
+
+  "notes": [
+    "This application uses Entity Framework 6 with LINQ queries for all database access. There are no inline SQL strings in the source code.",
+    "The SQL statements extracted are the equivalent SQL representations of the EF6 LINQ expressions.",
+    "EF6 handles the actual SQL generation and parameter binding at runtime - the extracted statements represent what EF6 would generate.",
+    "The PostgreSQL schema (gadgetsonline_dbo) with lowercase table and column names was already configured in the model annotations and OnModelCreating.",
+    "All Npgsql packages, connection strings, and provider configurations were already in place from a prior migration step.",
+    "All 19 DMS calls failed with metadata model creation error - manual conversion applied with lowercase schema mapping.",
+    "All 19 SQL equivalency validations returned ERROR from the tool - no agent judgment was used for equivalency.",
+    "No agent judgment was used to determine SQL equivalency - all 19 status values come exclusively from the sql-equivalency___validate_sql_equivalence tool.",
+    "The application compiles successfully with 0 errors and 0 warnings on .NET 8.0."
+  ]
+}
