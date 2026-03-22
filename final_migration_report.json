@@ -1,0 +1,101 @@
+{
+  "report_title": "GadgetsOnline - SQL Server to PostgreSQL Migration Final Report",
+  "report_date": "2026-03-22",
+  "application": {
+    "name": "GadgetsOnline",
+    "framework": ".NET 8.0 with Entity Framework 6",
+    "source_database": "Microsoft SQL Server 2019",
+    "target_database": "PostgreSQL 13"
+  },
+  "build_status": {
+    "final_build": "SUCCESS",
+    "warnings": 0,
+    "errors": 0
+  },
+  "sql_statement_processing": {
+    "total_statements_extracted": 12,
+    "dms_conversion_attempts": 12,
+    "dms_conversion_successful": 0,
+    "dms_conversion_failed": 12,
+    "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules. Please review your selection rules and try again.",
+    "dms_migration_project": "arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII",
+    "dms_database_name": "GadgetsOnline",
+    "dms_schema_name": "dbo",
+    "manual_conversions_applied": 12,
+    "manual_conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+    "manual_conversion_rules": "Lowercase all table and column names for PostgreSQL compatibility; TOP(N) converted to LIMIT N",
+    "equivalency_validated_equivalent": 0,
+    "equivalency_validated_not_equivalent": 0,
+    "equivalency_validation_error": 12,
+    "equivalency_error_reason": "SQL Equivalency tool returned ERROR with 'uniqueID' internal error for all 12 statement pairs",
+    "equivalency_note": "All equivalency statuses are from the sql-equivalency___validate_sql_equivalence tool output exclusively; no agent judgment was applied"
+  },
+  "configuration_verification": {
+    "package_references": {
+      "status": "PASS",
+      "sql_server_packages_found": 0,
+      "npgsql_packages": [
+        "Npgsql 5.0.18",
+        "EntityFramework6.Npgsql 6.4.3"
+      ],
+      "details": "No Microsoft.Data.SqlClient or System.Data.SqlClient references found in .csproj"
+    },
+    "connection_string": {
+      "status": "PASS",
+      "format": "PostgreSQL",
+      "value": "Host=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;Database=postgres;Username=${DB_USER};Password=${DB_PASSWORD};",
+      "details": "Uses Host=, Database=, Username=, Password= PostgreSQL format with environment variable placeholders"
+    },
+    "provider_configuration": {
+      "status": "PASS",
+      "provider": "Npgsql",
+      "connection_factory": "Npgsql.NpgsqlConnectionFactory, EntityFramework6.Npgsql",
+      "db_provider_factory": "Npgsql.NpgsqlFactory, Npgsql",
+      "details": "app.config correctly configured with Npgsql provider services and DbProviderFactories"
+    },
+    "entity_configuration": {
+      "status": "PASS",
+      "db_configuration_class": "GadgetsOnlineEntitiesPostgreSqlConfiguration",
+      "provider_services": "Npgsql.NpgsqlServices.Instance",
+      "schema": "gadgetsonline_dbo",
+      "entities_configured": [
+        "Product - ToTable(\"products\", \"gadgetsonline_dbo\") + 5 column mappings (productid, categoryid, name, price, productarturl)",
+        "Category - ToTable(\"categories\", \"gadgetsonline_dbo\") + 3 column mappings (categoryid, name, description)",
+        "Cart - ToTable(\"carts\", \"gadgetsonline_dbo\") + 5 column mappings (recordid, cartid, productid, count, datecreated)",
+        "Order - ToTable(\"orders\", \"gadgetsonline_dbo\") + 13 column mappings (orderid, orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total)",
+        "OrderDetail - ToTable(\"orderdetails\", \"gadgetsonline_dbo\") + 5 column mappings (orderdetailid, orderid, productid, quantity, unitprice)"
+      ],
+      "details": "All entity mappings use lowercase table/column names with gadgetsonline_dbo schema in both OnModelCreating fluent API and data annotation attributes"
+    },
+    "model_data_annotations": {
+      "status": "PASS",
+      "models_verified": [
+        "Product.cs - [Table(\"products\", Schema = \"gadgetsonline_dbo\")] with lowercase [Column] attributes",
+        "Category.cs - [Table(\"categories\", Schema = \"gadgetsonline_dbo\")] with lowercase [Column] attributes",
+        "Cart.cs - [Table(\"carts\", Schema = \"gadgetsonline_dbo\")] with lowercase [Column] attributes",
+        "Order.cs - [Table(\"orders\", Schema = \"gadgetsonline_dbo\")] with lowercase [Column] attributes",
+        "OrderDetail.cs - [Table(\"orderdetails\", Schema = \"gadgetsonline_dbo\")] with lowercase [Column] attributes"
+      ],
+      "details": "All 5 models have correct [Table] and [Column] attributes with lowercase names and gadgetsonline_dbo schema"
+    },
+    "sql_server_references_scan": {
+      "status": "PASS",
+      "sql_server_imports_found": 0,
+      "sql_server_ado_classes_found": 0,
+      "details": "No Microsoft.Data.SqlClient, System.Data.SqlClient, SqlConnection, SqlCommand, SqlDataReader, or SqlParameter references found in any .cs source files"
+    }
+  },
+  "artifacts": {
+    "extracted_statements": "extracted_statements.sql - 12 original MS SQL statements with DMS attempt timestamps",
+    "converted_statements": "converted_statements.sql - 12 converted PostgreSQL statements with conversion method documentation",
+    "equivalency_report": "sql_equivalency_validation_report.json - comprehensive validation report with all 12 statement pairs",
+    "migration_summary": "migration_summary.md - detailed migration narrative",
+    "final_report": "final_migration_report.json - this file"
+  },
+  "manual_review_recommendations": [
+    "DMS tool failed for all 12 statements due to metadata model creation error - manual review of converted statements recommended to confirm PostgreSQL compatibility",
+    "SQL Equivalency tool returned ERROR for all 12 statement pairs due to internal tool error ('uniqueID') - manual equivalency verification recommended",
+    "Connection string uses environment variable placeholders (${DB_USER}, ${DB_PASSWORD}) - ensure these are set in deployment environment",
+    "Application uses EF6 LINQ queries (not raw SQL) - converted SQL statements represent logical equivalents for documentation and verification, not embedded code that needs re-integration"
+  ]
+}
