@@ -1,0 +1,40 @@
+{
+  "number_of_statements_processed": 0,
+  "number_of_statements_equivalent": 0,
+  "number_of_statements_non_equivalent": 0,
+  "number_of_statements_with_equivalency_error": 0,
+  "statement_details": [],
+  "report_metadata": {
+    "project": "GadgetsOnline",
+    "migration": "SQL Server to PostgreSQL",
+    "generated_at": "2026-03-22",
+    "dms_migration_project": "arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII",
+    "source_database": "GadgetsOnline (SQL Server)",
+    "target_database": "postgres (PostgreSQL)",
+    "source_schema": "dbo",
+    "target_schema": "gadgetsonline_dbo",
+    "conversion_tool": "dms-mcp___statement_conversion_tool",
+    "validation_tool": "sql-equivalency___validate_sql_equivalence"
+  },
+  "notes": "No raw SQL statements were found in the GadgetsOnline codebase. The application uses Entity Framework 6 (EF6) with LINQ queries exclusively for all database operations. All 40 source files were exhaustively scanned (see extracted_statements.sql for complete scan results). The Npgsql EF6 provider generates PostgreSQL-compatible SQL at runtime, eliminating the need for manual SQL statement conversion. Zero statements were processed through the DMS MCP tool (dms-mcp___statement_conversion_tool) and zero statements required equivalency validation through the SQL Equivalency tool (sql-equivalency___validate_sql_equivalence) because no raw SQL exists in the codebase.",
+  "scan_summary": {
+    "total_files_scanned": 40,
+    "cs_files_scanned": 22,
+    "cshtml_files_scanned": 13,
+    "config_json_files_scanned": 5,
+    "raw_sql_statements_found": 0,
+    "database_access_pattern": "EF6 LINQ exclusively via DbSet<T> operations",
+    "orm_provider": "EntityFramework6.Npgsql 6.4.3 with Npgsql 5.0.18",
+    "schema_mapping": {
+      "source_schema": "dbo",
+      "target_schema": "gadgetsonline_dbo",
+      "tables": {
+        "dbo.Categories": "gadgetsonline_dbo.categories",
+        "dbo.Products": "gadgetsonline_dbo.products",
+        "dbo.Carts": "gadgetsonline_dbo.carts",
+        "dbo.Orders": "gadgetsonline_dbo.orders",
+        "dbo.OrderDetails": "gadgetsonline_dbo.orderdetails"
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+-- ============================================================================
+-- CONVERTED SQL STATEMENTS CATALOG
+-- GadgetsOnline - SQL Server to PostgreSQL Migration
+-- Generated: 2026-03-22
+-- ============================================================================
+--
+-- SUMMARY: No raw SQL statements were found in the codebase during the
+-- exhaustive scan performed in Step 1 (see extracted_statements.sql for
+-- detailed scan results of all 40 files).
+--
+-- This application uses Entity Framework 6 (EF6) with LINQ queries exclusively
+-- for all database operations. The Npgsql EF6 provider handles all SQL
+-- generation at runtime, converting LINQ expressions to PostgreSQL-compatible
+-- SQL automatically.
+--
+-- TOTAL SQL STATEMENTS EXTRACTED: 0
+-- TOTAL SQL STATEMENTS CONVERTED VIA DMS: 0
+-- TOTAL SQL STATEMENTS MANUALLY CONVERTED: 0
+-- TOTAL SQL STATEMENTS FAILED CONVERSION: 0
+--
+-- DMS Migration Project Used: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+-- Database Name: GadgetsOnline
+-- Source Schema: dbo
+-- Target Schema: gadgetsonline_dbo
+--
+-- No DMS conversions were required as there are no raw SQL statements to convert.
+-- The EF6 Npgsql provider generates PostgreSQL-compatible SQL at runtime.
+--
+-- Schema Mapping (applied via EF6 Fluent API and Data Annotations):
+--   dbo.Categories   -> gadgetsonline_dbo.categories   (lowercase)
+--   dbo.Products     -> gadgetsonline_dbo.products      (lowercase)
+--   dbo.Carts        -> gadgetsonline_dbo.carts         (lowercase)
+--   dbo.Orders       -> gadgetsonline_dbo.orders        (lowercase)
+--   dbo.OrderDetails -> gadgetsonline_dbo.orderdetails  (lowercase)
+--
+-- All column names are also mapped to lowercase via EF6 Fluent API configuration
+-- in GadgetsOnlineEntities.cs OnModelCreating() method.
+-- ============================================================================
