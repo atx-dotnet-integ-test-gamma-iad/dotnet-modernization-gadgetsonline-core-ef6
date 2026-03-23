@@ -1,0 +1,162 @@
+{
+  "number_of_statements_processed": 14,
+  "number_of_statements_equivalent": 0,
+  "number_of_statements_non_equivalent": 0,
+  "number_of_statements_with_equivalency_error": 14,
+  "statement_details": [
+    {
+      "statement_number": 1,
+      "source_file": "Services/Inventory.cs",
+      "method": "GetBestSellers",
+      "original_statement": "SELECT TOP 5 ProductId, CategoryId, Name, Price, ProductArtUrl FROM dbo.Products;",
+      "converted_statement": "SELECT productid, categoryid, name, price, productarturl FROM gadgetsonline_dbo.products LIMIT 5;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:38:19.444043\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 2,
+      "source_file": "Services/Inventory.cs",
+      "method": "GetAllCategories",
+      "original_statement": "SELECT CategoryId, Name, Description FROM dbo.Categories;",
+      "converted_statement": "SELECT categoryid, name, description FROM gadgetsonline_dbo.categories;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:38:31.442249\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 3,
+      "source_file": "Services/Inventory.cs",
+      "method": "GetAllProductsInCategory",
+      "original_statement": "SELECT p.ProductId, p.CategoryId, p.Name, p.Price, p.ProductArtUrl FROM dbo.Products p INNER JOIN dbo.Categories c ON p.CategoryId = c.CategoryId WHERE c.Name = @category;",
+      "converted_statement": "SELECT p.productid, p.categoryid, p.name, p.price, p.productarturl FROM gadgetsonline_dbo.products p INNER JOIN gadgetsonline_dbo.categories c ON p.categoryid = c.categoryid WHERE c.name = @category;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:38:42.257492\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 4,
+      "source_file": "Services/Inventory.cs",
+      "method": "GetProductById",
+      "original_statement": "SELECT TOP 1 ProductId, CategoryId, Name, Price, ProductArtUrl FROM dbo.Products WHERE ProductId = @id;",
+      "converted_statement": "SELECT productid, categoryid, name, price, productarturl FROM gadgetsonline_dbo.products WHERE productid = @id LIMIT 1;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:38:51.561101\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 5,
+      "source_file": "Services/Inventory.cs",
+      "method": "GetProductNameById",
+      "original_statement": "SELECT TOP 1 Name FROM dbo.Products WHERE ProductId = @id;",
+      "converted_statement": "SELECT name FROM gadgetsonline_dbo.products WHERE productid = @id LIMIT 1;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:00.940370\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 6,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "GetCartItems",
+      "original_statement": "SELECT RecordId, CartId, ProductId, Count, DateCreated FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:10.460043\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 7,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "GetCount",
+      "original_statement": "SELECT SUM(Count) FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted_statement": "SELECT SUM(count) FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:21.074859\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 8,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "GetTotal",
+      "original_statement": "SELECT SUM(c.Count * p.Price) FROM dbo.Carts c INNER JOIN dbo.Products p ON c.ProductId = p.ProductId WHERE c.CartId = @cartId;",
+      "converted_statement": "SELECT SUM(c.count * p.price) FROM gadgetsonline_dbo.carts c INNER JOIN gadgetsonline_dbo.products p ON c.productid = p.productid WHERE c.cartid = @cartId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:31.918280\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 9,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "AddToCart (SELECT)",
+      "original_statement": "SELECT RecordId, CartId, ProductId, Count, DateCreated FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:41.963638\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 10,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "AddToCart (INSERT)",
+      "original_statement": "INSERT INTO dbo.Carts (CartId, ProductId, Count, DateCreated) VALUES (@cartId, @productId, @count, @dateCreated);",
+      "converted_statement": "INSERT INTO gadgetsonline_dbo.carts (cartid, productid, count, datecreated) VALUES (@cartId, @productId, @count, @dateCreated);",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:39:55.603360\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 11,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "RemoveFromCart (SELECT)",
+      "original_statement": "SELECT RecordId, CartId, ProductId, Count, DateCreated FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;",
+      "converted_statement": "SELECT recordid, cartid, productid, count, datecreated FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:40:04.855831\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 12,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "EmptyCart (DELETE)",
+      "original_statement": "DELETE FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted_statement": "DELETE FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:40:14.929096\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 13,
+      "source_file": "Services/ShoppingCart.cs",
+      "method": "CreateOrder (INSERT)",
+      "original_statement": "INSERT INTO dbo.OrderDetails (ProductId, OrderId, UnitPrice, Quantity) VALUES (@productId, @orderId, @unitPrice, @quantity);",
+      "converted_statement": "INSERT INTO gadgetsonline_dbo.orderdetails (productid, orderid, unitprice, quantity) VALUES (@productId, @orderId, @unitPrice, @quantity);",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:40:25.358527\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    },
+    {
+      "statement_number": 14,
+      "source_file": "Services/OrderProcessing.cs",
+      "method": "ProcessOrder (INSERT)",
+      "original_statement": "INSERT INTO dbo.Orders (OrderDate, Username, FirstName, LastName, Address, City, State, PostalCode, Country, Phone, Email, Total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);",
+      "converted_statement": "INSERT INTO gadgetsonline_dbo.orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency_status": "ERROR",
+      "equivalency_tool_output": "{\"equivalence_status\": \"ERROR\", \"error\": \"'uniqueID'\", \"timestamp\": \"2026-03-23T20:40:37.212760\"}",
+      "dms_failure_reason": "Metadata model creation failed: No objects were found according to the specified selection rules."
+    }
+  ]
+}
