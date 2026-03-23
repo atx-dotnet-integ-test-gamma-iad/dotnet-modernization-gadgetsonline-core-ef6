@@ -1,0 +1,251 @@
+{
+  "report_title": "GadgetsOnline SQL Server to PostgreSQL Migration Report",
+  "report_date": "2026-03-23T12:57:00Z",
+  "application": {
+    "name": "GadgetsOnline",
+    "framework": ".NET 8.0 ASP.NET Core",
+    "orm": "Entity Framework 6 with EntityFramework6.Npgsql",
+    "database_access_pattern": "EF6 LINQ queries only - no raw/inline SQL statements",
+    "target_database": "PostgreSQL"
+  },
+  "migration_summary": {
+    "total_sql_statements_processed": 15,
+    "dms_successful_conversions": 0,
+    "dms_failed_conversions": 15,
+    "manual_conversions_applied": 15,
+    "manual_conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+    "dms_common_error": "Metadata model creation failed: No objects were found according to the specified selection rules",
+    "equivalency_validated_statements": 15,
+    "equivalent_statements": 0,
+    "non_equivalent_statements": 0,
+    "equivalency_error_statements": 15,
+    "equivalency_common_error": "'uniqueID'"
+  },
+  "code_changes_summary": {
+    "files_scanned": 22,
+    "files_with_sql_server_references_found": 0,
+    "sql_server_packages_removed": 0,
+    "npgsql_packages_present": true,
+    "connection_string_format": "PostgreSQL (Host=, Database=, Username=, Password=)",
+    "ef_provider": "Npgsql (EntityFramework6.Npgsql)",
+    "entity_model_schema": "gadgetsonline_dbo",
+    "entity_model_table_naming": "lowercase",
+    "entity_model_column_naming": "lowercase"
+  },
+  "package_references": {
+    "current_packages": [
+      {"name": "EntityFramework6.Npgsql", "version": "6.4.3"},
+      {"name": "Npgsql", "version": "5.0.18"},
+      {"name": "EntityFramework", "version": "6.5.1"},
+      {"name": "Microsoft.AspNetCore.Hosting.Abstractions", "version": "2.3.0"},
+      {"name": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets", "version": "1.17.0"}
+    ],
+    "sql_server_packages_present": false,
+    "notes": "No Microsoft.Data.SqlClient or System.Data.SqlClient packages found. Npgsql and EntityFramework6.Npgsql already in place."
+  },
+  "connection_strings": {
+    "current_format": "Host=gadgetsonline-sqlserver.c6nek0euoyl0.us-east-1.rds.amazonaws.com;Database=postgres;Username=${DB_USER};Password=${DB_PASSWORD};",
+    "is_postgresql_format": true,
+    "sql_server_patterns_found": false
+  },
+  "entity_framework_configuration": {
+    "db_configuration_class": "GadgetsOnlineEntitiesPostgreSqlConfiguration",
+    "provider_services": "NpgsqlServices.Instance",
+    "connection_factory": "NpgsqlConnectionFactory",
+    "app_config_provider": "Npgsql",
+    "table_mappings": [
+      {"entity": "Product", "table": "products", "schema": "gadgetsonline_dbo"},
+      {"entity": "Category", "table": "categories", "schema": "gadgetsonline_dbo"},
+      {"entity": "Cart", "table": "carts", "schema": "gadgetsonline_dbo"},
+      {"entity": "Order", "table": "orders", "schema": "gadgetsonline_dbo"},
+      {"entity": "OrderDetail", "table": "orderdetails", "schema": "gadgetsonline_dbo"}
+    ]
+  },
+  "sql_server_ado_net_classes_remaining": {
+    "SqlConnection": 0,
+    "SqlCommand": 0,
+    "SqlDataReader": 0,
+    "SqlParameter": 0,
+    "SqlTransaction": 0,
+    "total": 0
+  },
+  "build_status": {
+    "compiles_successfully": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "artifacts_generated": [
+    "extracted_statements.sql - Complete catalog of all 15 original MS SQL statements",
+    "converted_statements.sql - Complete catalog of all 15 converted PostgreSQL statements",
+    "sql_equivalency_validation_report.json - Full equivalency validation report for all 15 statement pairs",
+    "dms_conversion_summary.log - Detailed DMS interaction log for all 15 statements",
+    "final_migration_report.json - This comprehensive migration report"
+  ],
+  "statement_listing": [
+    {
+      "num": 1,
+      "label": "a",
+      "source": "Services/Inventory.cs",
+      "method": "GetBestSellers",
+      "original": "SELECT TOP(@count) * FROM dbo.Products;",
+      "converted": "SELECT * FROM products LIMIT @count;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 2,
+      "label": "b",
+      "source": "Services/Inventory.cs",
+      "method": "GetAllCategories",
+      "original": "SELECT * FROM dbo.Categories;",
+      "converted": "SELECT * FROM categories;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 3,
+      "label": "c",
+      "source": "Services/Inventory.cs",
+      "method": "GetAllProductsInCategory",
+      "original": "SELECT p.* FROM dbo.Products p INNER JOIN dbo.Categories c ON p.CategoryId = c.CategoryId WHERE c.Name = @category;",
+      "converted": "SELECT p.* FROM products p INNER JOIN categories c ON p.categoryid = c.categoryid WHERE c.name = @category;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 4,
+      "label": "d",
+      "source": "Services/Inventory.cs",
+      "method": "GetProductById",
+      "original": "SELECT TOP 1 * FROM dbo.Products WHERE ProductId = @id;",
+      "converted": "SELECT * FROM products WHERE productid = @id LIMIT 1;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 5,
+      "label": "e",
+      "source": "Services/Inventory.cs",
+      "method": "GetProductNameById",
+      "original": "SELECT TOP 1 Name FROM dbo.Products WHERE ProductId = @id;",
+      "converted": "SELECT name FROM products WHERE productid = @id LIMIT 1;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 6,
+      "label": "f",
+      "source": "Services/ShoppingCart.cs",
+      "method": "AddToCart_SELECT",
+      "original": "SELECT * FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;",
+      "converted": "SELECT * FROM carts WHERE cartid = @cartId AND productid = @productId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 7,
+      "label": "g",
+      "source": "Services/ShoppingCart.cs",
+      "method": "AddToCart_INSERT",
+      "original": "INSERT INTO dbo.Carts (CartId, ProductId, Count, DateCreated) VALUES (@cartId, @productId, @count, @dateCreated);",
+      "converted": "INSERT INTO carts (cartid, productid, count, datecreated) VALUES (@cartId, @productId, @count, @dateCreated);",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 8,
+      "label": "h",
+      "source": "Services/ShoppingCart.cs",
+      "method": "GetCartItems",
+      "original": "SELECT * FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted": "SELECT * FROM carts WHERE cartid = @cartId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 9,
+      "label": "i",
+      "source": "Services/ShoppingCart.cs",
+      "method": "GetCount",
+      "original": "SELECT SUM(Count) FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted": "SELECT SUM(count) FROM carts WHERE cartid = @cartId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 10,
+      "label": "j",
+      "source": "Services/ShoppingCart.cs",
+      "method": "RemoveFromCart_DELETE",
+      "original": "DELETE FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;",
+      "converted": "DELETE FROM carts WHERE cartid = @cartId AND productid = @productId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 11,
+      "label": "k",
+      "source": "Services/ShoppingCart.cs",
+      "method": "RemoveFromCart_UPDATE",
+      "original": "UPDATE dbo.Carts SET Count = Count - 1 WHERE CartId = @cartId AND ProductId = @productId;",
+      "converted": "UPDATE carts SET count = count - 1 WHERE cartid = @cartId AND productid = @productId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 12,
+      "label": "l",
+      "source": "Services/ShoppingCart.cs",
+      "method": "GetTotal",
+      "original": "SELECT SUM(c.Count * p.Price) FROM dbo.Carts c INNER JOIN dbo.Products p ON c.ProductId = p.ProductId WHERE c.CartId = @cartId;",
+      "converted": "SELECT SUM(c.count * p.price) FROM carts c INNER JOIN products p ON c.productid = p.productid WHERE c.cartid = @cartId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 13,
+      "label": "m",
+      "source": "Services/OrderProcessing.cs",
+      "method": "ProcessOrder_INSERT",
+      "original": "INSERT INTO dbo.Orders (OrderDate, Username, FirstName, LastName, Address, City, State, PostalCode, Country, Phone, Email, Total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);",
+      "converted": "INSERT INTO orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 14,
+      "label": "n",
+      "source": "Services/ShoppingCart.cs",
+      "method": "CreateOrder_INSERT",
+      "original": "INSERT INTO dbo.OrderDetails (OrderId, ProductId, Quantity, UnitPrice) VALUES (@orderId, @productId, @quantity, @unitPrice);",
+      "converted": "INSERT INTO orderdetails (orderid, productid, quantity, unitprice) VALUES (@orderId, @productId, @quantity, @unitPrice);",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    },
+    {
+      "num": 15,
+      "label": "o",
+      "source": "Services/ShoppingCart.cs",
+      "method": "EmptyCart",
+      "original": "DELETE FROM dbo.Carts WHERE CartId = @cartId;",
+      "converted": "DELETE FROM carts WHERE cartid = @cartId;",
+      "dms_status": "FAILED",
+      "conversion_method": "DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA",
+      "equivalency": "ERROR"
+    }
+  ]
+}
