@@ -1,0 +1,347 @@
+================================================================================
+GADGETSONLINE APPLICATION - MIGRATION REPORT
+Microsoft SQL Server to PostgreSQL Migration
+================================================================================
+
+Report Generated: 2026-03-23
+Application: GadgetsOnline (.NET 8.0 with Entity Framework 6)
+Source Database: Microsoft SQL Server 2019
+Target Database: PostgreSQL 13
+Migration Method: EF6 with Npgsql provider (no raw SQL statements in code)
+DMS Migration Project: arn:aws:dms:us-east-1:812756961751:migration-project:D2EE2K7HIVGZNMUDN2HU6AMQII
+
+================================================================================
+1. MIGRATION SUMMARY
+================================================================================
+
+The GadgetsOnline application has been migrated from Microsoft SQL Server to
+PostgreSQL. The application uses Entity Framework 6 with LINQ for all database
+access - there are no raw SQL strings in the code. All database operations are
+performed through EF6 DbContext (GadgetsOnlineEntities).
+
+The migration involved:
+- Replacing SQL Server packages with Npgsql equivalents
+- Configuring EF6 for PostgreSQL provider
+- Mapping all table/column names to lowercase PostgreSQL naming conventions
+- Updating schema from 'dbo' to 'gadgetsonline_dbo'
+- Updating connection strings to PostgreSQL format
+- Adding DateTime UTC normalization for PostgreSQL compatibility
+- Extracting, converting, and validating all 17 SQL statements through DMS and
+  SQL Equivalency tools
+
+================================================================================
+2. PACKAGE DEPENDENCY CHANGES
+================================================================================
+
+REMOVED:
+- Microsoft.Data.SqlClient (or System.Data.SqlClient) - SQL Server ADO.NET provider
+
+ADDED/RETAINED:
+- Npgsql 5.0.18 - PostgreSQL ADO.NET provider
+- EntityFramework6.Npgsql 6.4.3 - EF6 provider for PostgreSQL
+- EntityFramework 6.5.1 - Entity Framework 6 core
+
+UNCHANGED:
+- Microsoft.AspNetCore.Hosting.Abstractions 2.3.0
+- Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.17.0
+
+================================================================================
+3. CONFIGURATION CHANGES
+================================================================================
+
+Connection String (appsettings.json):
+- Format: Host=<endpoint>;Database=postgres;Username=${DB_USER};Password=${DB_PASSWORD};
+- PostgreSQL format using Host= instead of Server=
+- Database credentials use environment variable placeholders
+
+app.config:
+- Provider: Npgsql (invariantName="Npgsql", type="Npgsql.NpgsqlServices, EntityFramework6.Npgsql")
+- DefaultConnectionFactory: NpgsqlConnectionFactory
+- DbProviderFactory: Npgsql.NpgsqlFactory registered
+
+================================================================================
+4. CODE VERIFICATION RESULTS
+================================================================================
+
+SQL Server Classes Check:
+- SqlConnection: NOT FOUND (PASS)
+- SqlCommand: NOT FOUND (PASS)
+- SqlDataReader: NOT FOUND (PASS)
+- SqlParameter: NOT FOUND (PASS)
+- Microsoft.Data.SqlClient import: NOT FOUND (PASS)
+- System.Data.SqlClient import: NOT FOUND (PASS)
+
+Npgsql Configuration Verified:
+- NpgsqlServices.Instance: CONFIGURED
+- NpgsqlConnectionFactory: CONFIGURED AS DEFAULT
+- DbConfigurationType attribute: SET TO GadgetsOnlineEntitiesPostgreSqlConfiguration
+
+DateTime UTC Handling:
+- SaveChanges override: IMPLEMENTED (FixDateTimeKinds normalizes to UTC)
+- SaveChangesAsync override: IMPLEMENTED (FixDateTimeKinds normalizes to UTC)
+
+================================================================================
+5. TABLE MAPPING SUMMARY (dbo -> gadgetsonline_dbo)
+================================================================================
+
+Source (MS SQL Server)          -> Target (PostgreSQL)
+---------------------------------------------------------------
+dbo.Products                    -> gadgetsonline_dbo.products
+  ProductId                     ->   productid
+  CategoryId                    ->   categoryid
+  Name                          ->   name
+  Price                         ->   price
+  ProductArtUrl                 ->   productarturl
+
+dbo.Categories                  -> gadgetsonline_dbo.categories
+  CategoryId                    ->   categoryid
+  Name                          ->   name
+  Description                   ->   description
+
+dbo.Carts                       -> gadgetsonline_dbo.carts
+  RecordId                      ->   recordid
+  CartId                        ->   cartid
+  ProductId                     ->   productid
+  Count                         ->   count
+  DateCreated                   ->   datecreated
+
+dbo.Orders                      -> gadgetsonline_dbo.orders
+  OrderId                       ->   orderid
+  OrderDate                     ->   orderdate
+  Username                      ->   username
+  FirstName                     ->   firstname
+  LastName                      ->   lastname
+  Address                       ->   address
+  City                          ->   city
+  State                         ->   state
+  PostalCode                    ->   postalcode
+  Country                       ->   country
+  Phone                         ->   phone
+  Email                         ->   email
+  Total                         ->   total
+
+dbo.OrderDetails                -> gadgetsonline_dbo.orderdetails
+  OrderDetailId                 ->   orderdetailid
+  OrderId                       ->   orderid
+  ProductId                     ->   productid
+  Quantity                      ->   quantity
+  UnitPrice                     ->   unitprice
+
+================================================================================
+6. SQL STATEMENT PROCESSING SUMMARY
+================================================================================
+
+Total Logical SQL Statements Extracted: 16
+Total Physical SQL Statements: 17 (statement 11 split into UPDATE and DELETE)
+Source: EF6/LINQ operations inferred as equivalent MS SQL Server statements
+
+DMS Conversion Results:
+- Total DMS attempts: 17 (across 5 separate attempt rounds)
+- DMS Attempt #1: 2026-03-23T15:32 - All 17 failed
+- DMS Attempt #2: 2026-03-23T15:57 - All 17 failed
+- DMS Attempt #3: 2026-03-23T16:33 - All 17 failed
+- DMS Attempt #4: 2026-03-23T17:03 - All 17 failed
+- DMS Attempt #5: 2026-03-23T17:42 - All 17 failed
+- DMS successful: 0
+- DMS failed: 17
+- DMS error: "Metadata model creation failed: {'error': \"Metadata model creation
+  failed: {'default_error_details': {'message': 'No objects were found according
+  to the specified selection rules. Please review your selection rules and try
+  again.'}}\"}
+- All 17 statements were manually converted using lowercase schema mapping rules
+
+Manual Conversions Applied (DMS_FAILURE_MANUAL_CONVERSION_WITH_LOWERCASE_SCHEMA):
+- Total manually converted: 17
+- Conversion rules applied:
+  - dbo schema -> gadgetsonline_dbo schema
+  - All table/column names -> lowercase
+  - TOP (@count) -> LIMIT @count
+  - GETDATE() -> NOW()
+  - ISNULL() -> COALESCE()
+
+Statement Breakdown by Source File:
+- Services/Inventory.cs: 5 statements (Statements 1-5)
+  1. GetBestSellers: SELECT TOP -> SELECT...LIMIT
+     MS SQL: SELECT TOP (@count) ProductId, CategoryId, Name, Price, ProductArtUrl FROM dbo.Products;
+     PgSQL:  SELECT productid, categoryid, name, price, productarturl FROM gadgetsonline_dbo.products LIMIT @count;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:42:24)
+
+  2. GetAllCategories: SELECT all categories
+     MS SQL: SELECT CategoryId, Name, Description FROM dbo.Categories;
+     PgSQL:  SELECT categoryid, name, description FROM gadgetsonline_dbo.categories;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:42:49)
+
+  3. GetAllProductsInCategory: SELECT with JOIN
+     MS SQL: SELECT p.ProductId, p.CategoryId, p.Name, p.Price, p.ProductArtUrl FROM dbo.Products p INNER JOIN dbo.Categories c ON p.CategoryId = c.CategoryId WHERE c.Name = @category;
+     PgSQL:  SELECT p.productid, p.categoryid, p.name, p.price, p.productarturl FROM gadgetsonline_dbo.products p INNER JOIN gadgetsonline_dbo.categories c ON p.categoryid = c.categoryid WHERE c.name = @category;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:43:12)
+
+  4. GetProductById: SELECT with WHERE
+     MS SQL: SELECT ProductId, CategoryId, Name, Price, ProductArtUrl FROM dbo.Products WHERE ProductId = @id;
+     PgSQL:  SELECT productid, categoryid, name, price, productarturl FROM gadgetsonline_dbo.products WHERE productid = @id;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:43:36)
+
+  5. GetProductNameById: SELECT Name with WHERE
+     MS SQL: SELECT Name FROM dbo.Products WHERE ProductId = @id;
+     PgSQL:  SELECT name FROM gadgetsonline_dbo.products WHERE productid = @id;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:43:59)
+
+- Services/ShoppingCart.cs: 8 logical statements, 9 physical (Statements 6-13)
+  6. AddToCart (SELECT): Cart item lookup
+     MS SQL: SELECT RecordId, CartId, ProductId, Count, DateCreated FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;
+     PgSQL:  SELECT recordid, cartid, productid, count, datecreated FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:44:23)
+
+  7. AddToCart (INSERT): New cart item with GETDATE()->NOW()
+     MS SQL: INSERT INTO dbo.Carts (CartId, ProductId, Count, DateCreated) VALUES (@cartId, @productId, 1, GETDATE());
+     PgSQL:  INSERT INTO gadgetsonline_dbo.carts (cartid, productid, count, datecreated) VALUES (@cartId, @productId, 1, NOW());
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:44:49)
+
+  8. GetCount: SELECT SUM with ISNULL->COALESCE
+     MS SQL: SELECT ISNULL(SUM(Count), 0) FROM dbo.Carts WHERE CartId = @cartId;
+     PgSQL:  SELECT COALESCE(SUM(count), 0) FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:45:16)
+
+  9. GetCartItems: SELECT cart items
+     MS SQL: SELECT RecordId, CartId, ProductId, Count, DateCreated FROM dbo.Carts WHERE CartId = @cartId;
+     PgSQL:  SELECT recordid, cartid, productid, count, datecreated FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+     DMS:    FAILED (Attempt #5: 2026-03-23T17:45:39)
+
+  10. GetTotal: SELECT SUM with JOIN, ISNULL->COALESCE
+      MS SQL: SELECT ISNULL(SUM(c.Count * p.Price), 0) FROM dbo.Carts c INNER JOIN dbo.Products p ON c.ProductId = p.ProductId WHERE c.CartId = @cartId;
+      PgSQL:  SELECT COALESCE(SUM(c.count * p.price), 0) FROM gadgetsonline_dbo.carts c INNER JOIN gadgetsonline_dbo.products p ON c.productid = p.productid WHERE c.cartid = @cartId;
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:46:04)
+
+  11a. RemoveFromCart (UPDATE): Decrement count
+       MS SQL: UPDATE dbo.Carts SET Count = Count - 1 WHERE CartId = @cartId AND ProductId = @productId;
+       PgSQL:  UPDATE gadgetsonline_dbo.carts SET count = count - 1 WHERE cartid = @cartId AND productid = @productId;
+       DMS:    FAILED (Attempt #5: 2026-03-23T17:46:39)
+
+  11b. RemoveFromCart (DELETE): Remove item
+       MS SQL: DELETE FROM dbo.Carts WHERE CartId = @cartId AND ProductId = @productId;
+       PgSQL:  DELETE FROM gadgetsonline_dbo.carts WHERE cartid = @cartId AND productid = @productId;
+       DMS:    FAILED (Attempt #5: 2026-03-23T17:47:06)
+
+  12. EmptyCart: DELETE all cart items
+      MS SQL: DELETE FROM dbo.Carts WHERE CartId = @cartId;
+      PgSQL:  DELETE FROM gadgetsonline_dbo.carts WHERE cartid = @cartId;
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:47:29)
+
+  13. CreateOrder: INSERT order details
+      MS SQL: INSERT INTO dbo.OrderDetails (OrderId, ProductId, Quantity, UnitPrice) VALUES (@orderId, @productId, @quantity, @unitPrice);
+      PgSQL:  INSERT INTO gadgetsonline_dbo.orderdetails (orderid, productid, quantity, unitprice) VALUES (@orderId, @productId, @quantity, @unitPrice);
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:47:53)
+
+- Services/OrderProcessing.cs: 1 statement (Statement 14)
+  14. ProcessOrder: INSERT order record
+      MS SQL: INSERT INTO dbo.Orders (OrderDate, Username, FirstName, LastName, Address, City, State, PostalCode, Country, Phone, Email, Total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);
+      PgSQL:  INSERT INTO gadgetsonline_dbo.orders (orderdate, username, firstname, lastname, address, city, state, postalcode, country, phone, email, total) VALUES (@orderDate, @username, @firstName, @lastName, @address, @city, @state, @postalCode, @country, @phone, @email, @total);
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:48:16)
+
+- Models/GadgetsOnlineInitializer.cs: 2 statements (Statements 15-16)
+  15. Seed Categories: INSERT categories
+      MS SQL: INSERT INTO dbo.Categories (CategoryId, Name, Description) VALUES (@categoryId, @name, @description);
+      PgSQL:  INSERT INTO gadgetsonline_dbo.categories (categoryid, name, description) VALUES (@categoryId, @name, @description);
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:48:41)
+
+  16. Seed Products: INSERT products
+      MS SQL: INSERT INTO dbo.Products (ProductId, CategoryId, Name, Price, ProductArtUrl) VALUES (@productId, @categoryId, @name, @price, @productArtUrl);
+      PgSQL:  INSERT INTO gadgetsonline_dbo.products (productid, categoryid, name, price, productarturl) VALUES (@productId, @categoryId, @name, @price, @productArtUrl);
+      DMS:    FAILED (Attempt #5: 2026-03-23T17:49:06)
+
+================================================================================
+7. SQL EQUIVALENCY VALIDATION SUMMARY
+================================================================================
+
+Tool Used: sql-equivalency___validate_sql_equivalence
+Total Statement Pairs Validated: 17
+
+Results:
+- EQUIVALENT: 0
+- NOT_EQUIVALENT: 0
+- ERROR: 17
+
+Equivalency Validation Attempt #1: 2026-03-23T15:32
+Equivalency Validation Attempt #2: 2026-03-23T16:04
+Equivalency Validation Attempt #3: 2026-03-23T16:41
+Equivalency Validation Attempt #4: 2026-03-23T17:12
+Equivalency Validation Attempt #5: 2026-03-23T17:52
+
+Error Details:
+All 17 equivalency validations returned ERROR with the error message 'uniqueID'.
+This is a consistent tool-level issue affecting all validations. Each statement
+pair was individually submitted to the tool with proper MS SQL Server and
+PostgreSQL table creation statements, and each independently returned ERROR.
+
+Individual Equivalency Results (Attempt #5):
+  Statement 1:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:52:23.379852"}
+  Statement 2:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:52:32.688309"}
+  Statement 3:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:52:44.259488"}
+  Statement 4:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:52:54.161605"}
+  Statement 5:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:04.076253"}
+  Statement 6:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:14.703541"}
+  Statement 7:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:25.187159"}
+  Statement 8:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:34.493565"}
+  Statement 9:  ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:44.537231"}
+  Statement 10: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:53:55.959063"}
+  Statement 11a:ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:54:07.864603"}
+  Statement 11b:ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:54:18.343543"}
+  Statement 12: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:54:29.617157"}
+  Statement 13: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:54:39.397318"}
+  Statement 14: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:54:51.333506"}
+  Statement 15: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:55:05.136354"}
+  Statement 16: ERROR - {"equivalence_status": "ERROR", "error": "'uniqueID'", "timestamp": "2026-03-23T17:55:15.057773"}
+
+IMPORTANT: No agent judgment was used to determine equivalency status. All
+equivalency statuses in this report and in sql_equivalency_validation_report.json
+are directly from the sql-equivalency___validate_sql_equivalence tool output.
+
+================================================================================
+8. BUILD STATUS
+================================================================================
+
+Build Command: dotnet build GadgetsOnline.sln
+Result: BUILD SUCCEEDED
+Warnings: 0
+Errors: 0
+Output: GadgetsOnline.dll (net8.0)
+
+================================================================================
+9. STATEMENTS REQUIRING MANUAL REVIEW
+================================================================================
+
+ALL 17 statements require manual review because:
+1. DMS conversion failed for all statements (metadata model creation error)
+   - All 5 attempt rounds (2026-03-23T15:32, 2026-03-23T15:57, 2026-03-23T16:33,
+     2026-03-23T17:03, 2026-03-23T17:42) produced identical errors
+2. SQL equivalency validation returned ERROR for all statements (tool-level issue)
+   - All 5 attempt rounds (2026-03-23T15:32, 2026-03-23T16:04, 2026-03-23T16:41,
+     2026-03-23T17:12, 2026-03-23T17:52) produced identical errors
+
+While the manual conversions follow standard SQL Server -> PostgreSQL conversion
+rules and are expected to be correct, they should be validated through:
+- Integration testing against the target PostgreSQL database
+- Manual review of each converted statement
+- Re-running DMS and equivalency tools when available
+
+================================================================================
+10. ARTIFACT INVENTORY
+================================================================================
+
+Required Artifacts (all present and complete):
+[OK] extracted_statements.sql         - 16 logical (17 physical) original MS SQL Server statements
+[OK] converted_statements.sql         - 17 physical converted PostgreSQL statements
+[OK] sql_equivalency_validation_report.json - 17 validation results (all ERROR from tool)
+[OK] migration_report.txt             - This comprehensive report
+
+Completeness Verification:
+- Every SQL statement is accounted for (17/17 physical)
+- Every statement went through DMS tool (17/17, all documented failures across 5 attempts)
+- Every statement pair validated with equivalency tool (17/17, all documented ERROR across 5 attempts)
+- No agent judgment used for equivalency determination
+- Build succeeds with 0 errors and 0 warnings
+- No SqlClient references remain anywhere in the codebase
+
+================================================================================
+END OF MIGRATION REPORT
+================================================================================
