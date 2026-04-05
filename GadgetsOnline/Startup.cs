@@ -4,10 +4,11 @@ using GadgetsOnline.Models;
 using GadgetsOnline.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Data.Entity;
+
 
 namespace GadgetsOnline
 {
@@ -34,9 +35,13 @@ namespace GadgetsOnline
 
             services.AddControllersWithViews();
             services.AddScoped<GadgetsOnlineEntities>(provider =>
-                new GadgetsOnlineEntities(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities))));
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<GadgetsOnlineEntities>();
+                optionsBuilder.UseNpgsql(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities)));
+                return new GadgetsOnlineEntities(optionsBuilder.Options);
+            });
 
-            Database.SetInitializer(new GadgetsOnlineInitializer());
+
 
             services.AddScoped<IInventory, Inventory>();
             services.AddScoped<IShoppingCart, ShoppingCart>();
@@ -48,10 +53,13 @@ namespace GadgetsOnline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Initialize EF6 database on startup
-            using (var context = new GadgetsOnlineEntities(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities))))
+            var ensureOptions = new DbContextOptionsBuilder<GadgetsOnlineEntities>()
+                .UseNpgsql(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities)))
+                .Options;
+using (var context = new GadgetsOnlineEntities(ensureOptions))
             {
                 // This will trigger the initializer if needed
-                context.Database.Initialize(force: false);
+                context.Database.EnsureCreated();
             }
 
             if (env.IsDevelopment())
@@ -90,4 +98,3 @@ namespace GadgetsOnline
     }
 
 }
-
