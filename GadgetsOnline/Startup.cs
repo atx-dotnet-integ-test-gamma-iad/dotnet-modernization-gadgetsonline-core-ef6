@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using GadgetsOnline.Models;
 using GadgetsOnline.Services;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
 using System.Data.Entity;
 
 namespace GadgetsOnline
@@ -90,4 +91,3 @@ namespace GadgetsOnline
     }
 
 }
-
