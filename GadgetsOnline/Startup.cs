@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using GadgetsOnline.Models;
 using GadgetsOnline.Services;
@@ -36,6 +36,7 @@ namespace GadgetsOnline
             services.AddScoped<GadgetsOnlineEntities>(provider =>
                 new GadgetsOnlineEntities(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities))));
 
+            // EF6 database initializer — compatible with PostgreSQL via EntityFramework6.Npgsql
             Database.SetInitializer(new GadgetsOnlineInitializer());
 
             services.AddScoped<IInventory, Inventory>();
@@ -47,7 +48,7 @@ namespace GadgetsOnline
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Initialize EF6 database on startup
+            // Initialize EF6 database on startup (PostgreSQL via EntityFramework6.Npgsql)
             using (var context = new GadgetsOnlineEntities(Configuration.GetConnectionString(nameof(GadgetsOnlineEntities))))
             {
                 // This will trigger the initializer if needed
@@ -90,4 +91,3 @@ namespace GadgetsOnline
     }
 
 }
-
