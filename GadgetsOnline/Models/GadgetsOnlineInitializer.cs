@@ -1,6 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 
+// PostgreSQL Compatibility Review (EF6 + Npgsql):
+// - No EF Code-First Migrations folder exists; this project uses the EF6 database initializer pattern.
+// - CreateDatabaseIfNotExists<T> is fully supported by EF6 + Npgsql provider.
+// - Seed() uses pure C# object initializers — no SQL Server-specific syntax, types, or raw SQL.
+// - All table/column name mappings (lowercase, schema: gadgetsonline_dbo) are handled in
+//   GadgetsOnlineEntities.OnModelCreating() and entity [Table]/[Column] attributes.
+// - Database.SetInitializer(new GadgetsOnlineInitializer()) in Startup.cs is compatible as-is.
+// - No transformation required for this file.
+
 namespace GadgetsOnline.Models
 {
     public class GadgetsOnlineInitializer : CreateDatabaseIfNotExists<GadgetsOnlineEntities>
